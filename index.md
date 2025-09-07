@@ -1,12 +1,4 @@
-# Test file
+# Intro
 
-Below some testing with plugins.
+Below an introduction on plugins.
 
-````{example} Here is an example
-With some text. 
-
-```{figure} Figures/avatar.png
-:name: fig_1
-
-And a figure
-```
