@@ -20,6 +20,7 @@ project:
   
   downloads:
     - id: output-pdf2
+    - id: output-pdf1
 
   exports:
     - format: typst
@@ -37,6 +38,7 @@ project:
 
 site:
   template: book-theme
-  # options:
+  options:
+    style: ./style/custom.css
   #   favicon: favicon.ico
   #   logo: site_logo.png
