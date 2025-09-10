@@ -13,3 +13,4 @@ Local test build pdf  (myst build --pdf)
 | plugin | description | release link |
 | -------- | -------- | -------- |
 | example  | adds example support to pdf conversion  | https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/example/example.mjs  |
+| experiment  | adds experiment support to pdf conversion  | https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/example/example.mjs  |
