@@ -56,9 +56,9 @@ const exampleTransform = {
     const looksLikePdf =
       process.argv.some(a => /pdf|xelatex|typst/i.test(a)) ||
       /pdf|xelatex|typst/i.test(process.env.MYST_TARGET || "");
-
+    
     if (!looksLikePdf) return;
-
+    
     // Kleine recursive visitor (geen utils.visit nodig)
     const visit = (node, fn) => {
       if (!node || typeof node !== "object") return;
