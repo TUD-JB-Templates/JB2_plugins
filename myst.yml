@@ -15,7 +15,8 @@ project:
   abstract: This is a test project for Jupyter Book plugins.
 
   plugins:
-    - plugins/example.mjs
+    - https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/example/example.mjs
+    - https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/experiment/experiment.mjs
   
   exports:
     - format: typst
@@ -29,8 +30,7 @@ project:
       id: output-pdf2
 
   toc:
-    - file: index.md
-    - file: test.md
+    - file: contents/pdf_support.md
 
 site:
   template: book-theme

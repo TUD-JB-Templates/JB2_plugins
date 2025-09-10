@@ -1,7 +1,8 @@
 # Testing
 
-````{example} Here is an example
+```{example} Here is an example
 With some text. 
+```
 
 ```{figure} Figures/avatar.png
 :name: fig_1

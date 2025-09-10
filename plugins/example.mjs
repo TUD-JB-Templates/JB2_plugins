@@ -1,4 +1,6 @@
-// example.mjs
+// Add 'example' directive support for PDF formatting in Myst. Transform only works if --pdf flag used during build. e.g. myst build --pdf 
+// Based on https://next.jupyterbook.org/plugins/directives-and-roles#create-a-custom-admonition
+// Add CSS for formatting
 
 // Helpers
 const parseInline = (s, ctx) => {

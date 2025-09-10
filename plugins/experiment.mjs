@@ -1,6 +1,7 @@
-/* Custom experiment admonition, based on documentation (see https://next.jupyterbook.org/plugins/directives-and-roles#create-a-custom-admonition). 
-*   css file (custom.css) included in style folder. 
-*/
+// Add 'experiment' directive support for PDF formatting in Myst. Transform only works if --pdf flag used during build. e.g. myst build --pdf
+// Based on https://next.jupyterbook.org/plugins/directives-and-roles#create-a-custom-admonition
+// Add CSS for formatting
+
 
 const experiment = {
   name: "experiment",
@@ -14,13 +15,6 @@ const experiment = {
     
     let title = data.arg.trim();
     let body = data.body.trim();
-
-    // console.log("[experiment plugin] ", data.arg, data.body);
-    // console.log("[experiment plugin] ", ctx.parseMyst(body));
-    // console.log("[experiment plugin] ", ctx.parseMyst(body)["children"]);
-    // console.log("[experiment plugin] ", ctx.parseMyst(body)["children"][0]);
-
-
 
     const admonition = {
         "type": "admonition",
@@ -125,8 +119,6 @@ const experimentTransform = {
     });
   },
 };
-
-
 
 const plugin = {
   name: "experiment",
