@@ -18,6 +18,9 @@ project:
     - https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/example/example.mjs
     - https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/experiment/experiment.mjs
   
+  downloads:
+    - id: output-pdf2
+
   exports:
     - format: typst
       template: lapreprint-typst
