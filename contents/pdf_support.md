@@ -55,8 +55,23 @@ with a description
 Use this link to add support for intermezzo's when converting to pdf:  
 
 ```text
-https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/iframe/iframe.mjs
+https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/intermezzo/intermezzo.mjs
 ```
+
+# exercises
+
+```{exercise}
+:label: my-exercise
+
+1 + 1 = ... ?
+
+```
+Use this link to add support for exercises when converting to pdf:  
+
+```text
+https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/exercise/exercise.mjs
+```
+
 
 
 - style must have been included in css file.
