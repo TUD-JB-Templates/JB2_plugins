@@ -18,7 +18,8 @@ Plugins for JB2
 | intermezzo  | adds intermezzo support to PDF conversion  | https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/intermezzo/intermezzo.mjs  |
 | exercise  | adds exercise support to PDF conversion  | https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/exercise/exercise.mjs  |
 
-| <b> CSS </b> | <b> description </b> | release link |
+| CSS | description | release link |
+| -------- | -------- | -------- |
 | main | main css file, includes css for all plugins described above | https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/CSS/custom.css |
 
 
