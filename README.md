@@ -26,4 +26,13 @@ project:
     - https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/example/example.mjs
 ```
 
-CSS file needed for rendering the plugin admonitons.
+CSS file needed for rendering the plugin admonitons. The CSS file can be included as 
+
+```{code} yaml
+:filename: myst.yml
+site:
+  template: book-theme
+  options:
+    style: https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/CSS/custom.css
+```
+
