@@ -21,8 +21,8 @@ const iframeTransform = {
   stage: "document",
   plugin: (opts, utils) => async (tree) => {
     
-    // Detect if we are building a PDF
-    const isPDF = process.argv.some(arg => arg.includes("pdf"));
+    // Detect if we are building a PDF by checking for pdf or typst in the command line arguments
+    const isPDF = process.argv.some(arg => arg.includes("pdf") || arg.includes("typst"));
 
     // Get all nodes for each page
     const rootChildren = tree.children[0]?.children || [];

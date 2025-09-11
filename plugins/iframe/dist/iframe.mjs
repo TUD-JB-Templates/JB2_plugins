@@ -1640,7 +1640,7 @@ var iframeTransform = {
   doc: "Replace iframes in PDF builds with QR codes.",
   stage: "document",
   plugin: (opts, utils) => async (tree) => {
-    const isPDF = process.argv.some((arg) => arg.includes("pdf"));
+    const isPDF = process.argv.some((arg) => arg.includes("pdf") || arg.includes("typst"));
     const rootChildren = tree.children[0]?.children || [];
     if (isPDF) {
       for (const [index, node] of rootChildren.entries()) {
