@@ -39,7 +39,7 @@ a great movei
 Use this link to add support for iframes when converting to pdf:  
 
 ```text
-https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/experiment/experiment.mjs
+https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/iframe/iframe.mjs
 ```
 
 The iframe will be replaced by a QR code, leading to the iframe
