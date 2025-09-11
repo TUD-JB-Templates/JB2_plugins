@@ -17,7 +17,8 @@ project:
   plugins:
     - https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/example/example.mjs
     - https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/experiment/experiment.mjs
-
+    - plugins/iframe/dist/iframe.mjs
+    
   downloads:
     - id: output-pdf2
     - id: output-pdf1

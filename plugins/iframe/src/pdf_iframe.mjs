@@ -9,6 +9,7 @@
 // see (https://next.jupyterbook.org/plugins/directives-and-roles#create-a-transform)
 
 // npm install qrcode
+
 import QRCode from "qrcode";
 import { writeFile } from "fs/promises";
 import { type } from "os";
