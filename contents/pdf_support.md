@@ -66,6 +66,14 @@ https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/intermezzo/int
 1 + 1 = ... ?
 
 ```
+
+```{solution} my-exercise
+:label: my-solution
+
+2
+
+```
+
 Use this link to add support for exercises when converting to pdf:  
 
 ```text
