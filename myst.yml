@@ -17,7 +17,7 @@ project:
   plugins:
     - https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/example/example.mjs
     - https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/experiment/experiment.mjs
-  
+
   downloads:
     - id: output-pdf2
     - id: output-pdf1
@@ -39,6 +39,6 @@ project:
 site:
   template: book-theme
   options:
-    style: ./style/custom.css
+    style: https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/CSS/custom.css
   #   favicon: favicon.ico
   #   logo: site_logo.png
