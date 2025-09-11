@@ -24,11 +24,8 @@ const intermezzo = {
           
           {
             "type": "admonitionTitle",
-            "class": "admonition-title-intermezzo", // This does not work! note to self: not all dirs take their classes to the output. 
-            // The first ["children"][0] removes the MyST "tree" top-level node.
-            // The second ["children"] removes an unnecessary top-level paragraph node.
+            "class": "admonition-title-intermezzo",
             "children": ctx.parseMyst(`${title}`)["children"][0]["children"]
-            
           },
           
           {

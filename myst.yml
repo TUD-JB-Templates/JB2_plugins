@@ -19,7 +19,7 @@ project:
     - https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/experiment/experiment.mjs
     - https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/iframe/iframe.mjs
     - https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/intermezzo/intermezzo.mjs
-    - plugins/pdf_exercise.mjs
+    - https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/exercise/pdf_exercise.mjs
     
   downloads:
     - id: output-pdf2

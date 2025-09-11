@@ -77,8 +77,12 @@ https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/intermezzo/int
 Use this link to add support for exercises when converting to pdf:  
 
 ```text
-https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/exercise/exercise.mjs
+https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/exercise/pdf_exercise.mjs
 ```
+
+## Custom element
+
+To generate a custom element, including css
 
 
 
