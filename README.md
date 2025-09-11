@@ -12,9 +12,9 @@ Plugins for JB2
 
 | plugin | description | release link |
 | -------- | -------- | -------- |
-| example  | adds example support to pdf conversion  | https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/example/example.mjs  |
-| experiment  | adds experiment support to pdf conversion  | https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/example/example.mjs  |
-| iframe  | Turns iframes into qr codes during pdf conversion  | https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/iframe/iframe.mjs  |
+| example  | adds example support to PDF conversion  | https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/example/example.mjs  |
+| experiment  | adds experiment support to PDF conversion  | https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/example/example.mjs  |
+| iframe  | Turns iframes into QR codes during PDF conversion  | https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/iframe/iframe.mjs  |
 
 
 

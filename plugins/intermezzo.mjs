@@ -15,16 +15,9 @@ const intermezzo = {
     let title = data.arg.trim();
     let body = data.body.trim();
 
-    // console.log("[intermezzo plugin] ", data.arg, data.body);
-    // console.log("[intermezzo plugin] ", ctx.parseMyst(body));
-    // console.log("[intermezzo plugin] ", ctx.parseMyst(body)["children"]);
-    // console.log("[intermezzo plugin] ", ctx.parseMyst(body)["children"][0]);
-
-
-
     const admonition = {
         "type": "admonition",
-        "kind": "admonition",
+        "kind": "note",
         "class": "admonition-intermezzo",  //Add class (custom.css)
         "icon": false,
         "children": [

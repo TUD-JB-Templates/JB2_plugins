@@ -46,6 +46,17 @@ The iframe will be replaced by a QR code, leading to the iframe
 
 ## intermezzo
 
-todo
+```{intermezzo} this is an intermezzo
+
+with a description
+
+```
+
+Use this link to add support for intermezzo's when converting to pdf:  
+
+```text
+https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/iframe/iframe.mjs
+```
+
 
 - style must have been included in css file.
