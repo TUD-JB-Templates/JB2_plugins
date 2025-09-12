@@ -21,7 +21,7 @@ Plugins for JB2
 | CSS | description | release link |
 | -------- | -------- | -------- |
 | plugin css | main css file used by all plugins described above | https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/CSS/custom.css |
-| TUD style | provides TUD style | https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/TUDstyle/TUDstyle.css |
+| TUD style | provides TUD style | https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/TUDstyle/TUDstyle.css  |
 
 
 
