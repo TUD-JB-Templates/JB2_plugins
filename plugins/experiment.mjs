@@ -18,7 +18,7 @@ const experiment = {
 
     const admonition = {
         "type": "admonition",
-        "kind": "admonition",
+        "kind": "note",
         "class": "admonition-experiment",  //Add class (custom.css)
         "icon": false,
         "children": [
@@ -127,4 +127,3 @@ const plugin = {
 };
 
 export default plugin;
-
