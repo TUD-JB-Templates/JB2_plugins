@@ -18,7 +18,7 @@ project:
     - https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/example/example.mjs
     - https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/experiment/experiment.mjs
     - plugins/iframe/dist/iframe.mjs
-    - plug
+    - plugins/aside.mjs
     
   downloads:
     - id: output-pdf2
@@ -26,7 +26,7 @@ project:
 
   exports:
     - format: typst
-      template: lapreprint-typst
+      template: ./pdf_template_book #lapreprint-typst
       output: exports/Test_plugin_typst.pdf
       id: output-pdf1
 

@@ -8,6 +8,10 @@ With some text.
 
 ```
 
+```{aside} This is an aside
+Sidenote with some text
+```
+
 Use this link to add support for the example directive when converting to pdf:  
 
 ```text
