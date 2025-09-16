@@ -12,9 +12,16 @@ Plugins for JB2
 
 | plugin | description | release link |
 | -------- | -------- | -------- |
-| example  | adds example support to pdf conversion  | https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/example/example.mjs  |
-| experiment  | adds experiment support to pdf conversion  | https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/example/example.mjs  |
-| iframe  | Turns iframes into qr codes during pdf conversion  | https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/iframe/iframe.mjs  |
+| example  | adds example support to PDF conversion  | https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/example/example.mjs  |
+| experiment  | adds experiment support to PDF conversion  | https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/example/example.mjs  |
+| iframe  | Turns iframes into QR codes during PDF conversion  | https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/iframe/iframe.mjs  |
+| intermezzo  | adds intermezzo support to PDF conversion  | https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/intermezzo/intermezzo.mjs  |
+| exercise  | adds exercise support to PDF conversion  | https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/exercise/exercise.mjs  |
+
+| CSS | description | release link |
+| -------- | -------- | -------- |
+| plugin css | main css file used by all plugins described above | https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/CSS/custom.css |
+| TUD style | provides TUD style | https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/TUDstyle/TUDstyle.css  |
 
 
 

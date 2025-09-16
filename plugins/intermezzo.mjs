@@ -15,27 +15,17 @@ const intermezzo = {
     let title = data.arg.trim();
     let body = data.body.trim();
 
-    // console.log("[intermezzo plugin] ", data.arg, data.body);
-    // console.log("[intermezzo plugin] ", ctx.parseMyst(body));
-    // console.log("[intermezzo plugin] ", ctx.parseMyst(body)["children"]);
-    // console.log("[intermezzo plugin] ", ctx.parseMyst(body)["children"][0]);
-
-
-
     const admonition = {
         "type": "admonition",
-        "kind": "admonition",
+        "kind": "note",
         "class": "admonition-intermezzo",  //Add class (custom.css)
         "icon": false,
         "children": [
           
           {
             "type": "admonitionTitle",
-            "class": "admonition-title-intermezzo", // This does not work! note to self: not all dirs take their classes to the output. 
-            // The first ["children"][0] removes the MyST "tree" top-level node.
-            // The second ["children"] removes an unnecessary top-level paragraph node.
+            "class": "admonition-title-intermezzo",
             "children": ctx.parseMyst(`${title}`)["children"][0]["children"]
-            
           },
           
           {
