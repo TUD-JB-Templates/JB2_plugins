@@ -3,6 +3,7 @@ kind: typst
 title: LaPreprint Typst Template
 description: Easily create beautiful preprints in Typst
 template: template.typ
+
 files:
   - template.typ
   - style.typ

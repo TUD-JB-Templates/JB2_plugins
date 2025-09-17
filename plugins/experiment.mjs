@@ -47,8 +47,8 @@ const experimentTransform = {
   doc: "Replace custom experiment admonitions in PDF builds.",
   stage: "document",
   plugin: (opts, utils) => (tree) => {
-    // Detect if we are building a PDF
-    const isPDF = process.argv.some(arg => arg.includes("pdf"));
+    // Detect if we are building a PDF or typst
+    const isPDF = process.argv.some(arg => arg.includes("pdf") || arg.includes("typst"));
 
     // (Optional) keep a map if you later want to cross-link experiments
     const labelMap = new Map();

@@ -6,7 +6,7 @@ project:
   # description:
   # keywords: []
   authors: 
-  - Luuk Froling 
+  - Luuk Fröling 
   - Freek Pols
 
   github: https://github.com/TUD-JB-Templates/JB2_plugins
@@ -16,10 +16,11 @@ project:
 
   plugins:
     - https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/example/example.mjs
-    - https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/experiment/experiment.mjs
+    - plugins/experiment.mjs
     - https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/iframe/iframe.mjs
     - https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/intermezzo/intermezzo.mjs
     - https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/exercise/pdf_exercise.mjs
+    - plugins/aside.mjs
     
   downloads:
     - id: output-pdf2
@@ -30,14 +31,19 @@ project:
       template: ./pdf_template_book #lapreprint-typst
       output: exports/Test_plugin_typst.pdf
       id: output-pdf1
-
+    
     - format: pdf
       template: plain_latex_book
       output: exports/Test_plugin_latex.pdf
       id: output-pdf2
 
+
   toc:
-    - file: contents/pdf_support.md
+  - file: README.md
+  - title: Content
+    children:
+      - file: contents/typst_support.md
+      - file: contents/pdf_support.md
 
 site:
   template: book-theme
