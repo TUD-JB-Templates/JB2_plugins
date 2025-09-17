@@ -35,12 +35,6 @@ const asideTransform = {
 
     let rootChildren = tree.children?.[0]?.children || [];
 
-    // log each node, regardless of depth
-    console.log("tree before change: ")
-    rootChildren.forEach((node) => {
-      console.log(node)
-    });
-
     for (let i = 0; i < rootChildren.length; i++) {
       const n = rootChildren[i];
 
