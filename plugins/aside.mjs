@@ -51,7 +51,7 @@ const asideTransform = {
       // ]
 
       rootChildren[i] = generateTypstNode(
-        `#noteBlock(heading: [Aside: ${title}])[\n${body.map(b => getText(b)).join("\n")}\n]`
+        '#import "aside_style.typ": aside \n #aside("' + title + '", "' + body.map(b => getText(b)).join("\n") + '")'
       );
     }
   },

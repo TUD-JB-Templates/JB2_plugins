@@ -44,6 +44,7 @@ project:
     children:
       - file: contents/typst_support.md
       - file: contents/pdf_support.md
+      - file: contents/typst_element.md
 
 site:
   template: book-theme

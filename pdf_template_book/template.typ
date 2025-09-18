@@ -1,5 +1,6 @@
 #import "@preview/marge:0.1.0"
 #import "style.typ": template
+#import "aside_style.typ": aside
 #show: template.with(
 
 // title
