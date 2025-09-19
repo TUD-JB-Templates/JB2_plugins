@@ -40,10 +40,14 @@ project:
 
   toc:
   - file: README.md
-  - title: Content
+  - title: PDF Support
     children:
-      - file: contents/typst_support.md
+      - file: contents/chapter_1.md
       - file: contents/pdf_support.md
+  - title: Typst support
+    children: 
+      - file: contents/chapter_2.md
+      - file: contents/typst_support.md
       - file: contents/typst_element.md
 
 site:

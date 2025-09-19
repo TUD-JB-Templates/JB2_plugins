@@ -40,10 +40,13 @@
     }
   })
 
-  // figure
+  // Set figure numbering to x.y where x is chapter number and y is figure number within chapter
+
   set figure(numbering: (..args) => {
-    let chapter = counter(heading).display((..nums) => nums.pos().at(0))
-    [#chapter.#numbering("1", ..args.pos())]
+    // get current chapter number (first level of heading)
+    let chapter = counter(heading).display((..nums) => nums.pos().at(0)) // nums is array of all levels, at(0) is first level, display formats it.  
+    let fig = counter(figure).display("1")    // counter counts, display formats it
+    [#chapter.#fig]
   })
   
 
