@@ -1,6 +1,4 @@
 // plugins/typst_eq.mjs
-// plugin to convert missing latex symbols in typst
-
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -46,34 +44,79 @@ const DEFAULTS = {
 
 function loadMapping(mappingPath, inlineMap) {
   if (mappingPath) {
-    // resolve t.o.v. project root (cwd)
-    const abs = path.isAbsolute(mappingPath) ? mappingPath : path.resolve(process.cwd(), mappingPath);
+    const abs = path.isAbsolute(mappingPath)
+      ? mappingPath
+      : path.resolve(process.cwd(), mappingPath);
     return JSON.parse(fs.readFileSync(abs, 'utf8'));
   }
   return inlineMap ?? DEFAULTS;
 }
 
-function makeRewriter({ mappingPath, mapping, accents = 'typst' } = {}) {
+// generieke helper voor gebalanceerde LaTeX-commando's
+function replaceBalancedCommand(src, cmd, mapper) {
+  const needle = `\\${cmd}`;
+  let i = 0;
+  while (true) {
+    const start = src.indexOf(needle, i);
+    if (start === -1) break;
+    const open = src.indexOf('{', start + needle.length);
+    if (open === -1) break;
+
+    let depth = 1, j = open + 1;
+    while (j < src.length && depth > 0) {
+      const ch = src[j];
+      if (ch === '{') depth += 1;
+      else if (ch === '}') depth -= 1;
+      j += 1;
+    }
+    if (depth !== 0) break;
+
+    const inner = src.slice(open + 1, j - 1);
+    const repl = mapper(inner);
+    src = src.slice(0, start) + repl + src.slice(j);
+    i = start + repl.length;
+  }
+  return src;
+}
+
+// \text{...}  →  upright("...")
+function replaceAllTextBalanced(src) {
+  return replaceBalancedCommand(src, 'text', (inner) => {
+    // behoud spaties en escape dubbele quotes
+    const escaped = inner.replace(/"/g, '\\"');
+    return `${escaped}`;
+  });
+}
+
+// \substack{a \\ b \\ c}  →  line(a, b, c)
+function replaceAllSubstackBalanced(src) {
+  return replaceBalancedCommand(src, 'substack', (inner) => {
+    // Splits op dubbele backslash \\ (LaTeX newline)
+    const parts = inner.split(/\\\\\\\\\s*/).map(s => s.trim()).filter(Boolean);
+    return `${parts.join(', ')}`;
+  });
+}
+
+function makeRewriter({ mappingPath, mapping } = {}) {
   const mapObj = loadMapping(mappingPath, mapping);
 
-  const pairs = Object.entries(mapObj).sort((a, b) => b[0].length - a[0].length);
+  // 1) letterlijke mapping (\oint → ∮, …) – geen partial matches
+  const entries = Object.entries(mapObj).sort((a, b) => b[0].length - a[0].length);
   const literalRewrite = (src) => {
     let out = src;
-    for (const [pat, repl] of pairs) out = out.replace(new RegExp(pat, 'g'), repl);
+    for (const [pat, repl] of entries) {
+      out = out.replace(new RegExp(`${pat}(?![A-Za-z])`, 'g'), repl);
+    }
     return out;
   };
 
-  const accent = (cmd, name) => (accents === 'typst' ? `${cmd}(${name})` : name);
-  const structuralRewrite = (src) =>
-    src
-      // .replace(/\\hat\s*\{([^{}]+)\}/g, (_m, x) => accent('hat', x))
-      // .replace(/\\vec\s*\{([^{}]+)\}/g, (_m, x) => accent('vec', x))
-      // .replace(/\\bar\s*\{([^{}]+)\}/g, (_m, x) => accent('overbar', x))
-      // .replace(/\\overline\s*\{([^{}]+)\}/g, (_m, x) => accent('overline', x));
-      .replace(/\\substack\s*\{([^{}]+)\}/g, (_m, inner) => {
-      // split at \\ and wrap in line()
-      const parts = inner.split(/\\\\/).map((s) => s.trim());
-      return `line(${parts.join(', ')})`;
+  // 2) structurele vervangingen
+  const structuralRewrite = (src) => {
+    let s = src;
+    s = replaceAllTextBalanced(s);
+    s = replaceAllSubstackBalanced(s);
+    return s;
+  };
 
   return (math) => structuralRewrite(literalRewrite(math));
 }
