@@ -11,8 +11,9 @@ project:
 
   github: https://github.com/TUD-JB-Templates/JB2_plugins
   # To autogenerate a Table of Contents, run "myst init --write-toc"
-  date: 2025-08-25 
-  abstract: This is a test project for Jupyter Book plugins.
+  date: 2025-09-19 
+
+  description: This is a test project for Jupyter Book plugins, with a description. Sounds good.. #preface
 
   plugins:
     - https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/example/example.mjs
@@ -21,9 +22,10 @@ project:
     - https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/intermezzo/intermezzo.mjs
     - https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/exercise/pdf_exercise.mjs
     - plugins/aside.mjs
+    - plugins/typst_eq.mjs
     
   downloads:
-    - id: output-pdf2
+    # - id: output-pdf2
     - id: output-pdf1
 
   exports:
@@ -32,10 +34,10 @@ project:
       output: exports/Test_plugin_typst.pdf
       id: output-pdf1
     
-    - format: pdf
-      template: plain_latex_book
-      output: exports/Test_plugin_latex.pdf
-      id: output-pdf2
+    # - format: pdf
+    #   template: plain_latex_book
+    #   output: exports/Test_plugin_latex.pdf
+    #   id: output-pdf2
 
 
   toc:
@@ -44,11 +46,12 @@ project:
     children:
       - file: contents/chapter_1.md
       - file: contents/pdf_support.md
+  - file: contents/chapter_2.md
   - title: Typst support
-    children: 
-      - file: contents/chapter_2.md
+    children:       
       - file: contents/typst_support.md
       - file: contents/typst_element.md
+      - file: contents/typst_eq.md
 
 site:
   template: book-theme

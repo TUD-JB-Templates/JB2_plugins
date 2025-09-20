@@ -17,6 +17,8 @@
 [# endif #]
   cover: "Cover.PNG",
 
+  description: "[-doc.description-]",
+
 )
 
 [-IMPORTS-]

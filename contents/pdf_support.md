@@ -60,7 +60,7 @@ https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/intermezzo/int
 
 # exercises
 
-```{exercise}
+```{exercise} my-exercise
 :label: my-exercise
 
 1 + 1 = ... ?

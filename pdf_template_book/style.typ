@@ -21,6 +21,8 @@
   subtitle: none,
   authors: "Your name",
   cover: "path",            // <— path to cover "images/cover.png"
+  description: "description",
+
   cover_width: 12cm,    
   // A color for the theme of the document
   theme: red.darken(30%),
@@ -62,6 +64,8 @@
   set enum(indent: 10pt, body-indent: 9pt)
   set list(indent: 10pt, body-indent: 9pt)
 
+
+
 // COVERPAGE
   // Title, subtitle, 
   align(center, text(17pt, weight: "bold", fill: theme, title))
@@ -83,10 +87,21 @@
   place(bottom + right, 
     text(12pt, fill: gray.darken(50%), authors)
   )
+
   }
 
 
-  // Outline of book
+// PREFACE, BASED ON DESCRIPTION
+  pagebreak()
+  if description != none {
+    place(top + left, 
+      text(14pt, fill: red.darken(50%), "Preface")
+    )
+    v(1em)
+    align(center, box(width: 50%, text(11pt, fill: gray.darken(30%), description)))
+  }
+
+//OUTLINE OF THE BOOK
   pagebreak()
   show outline.entry.where(level: 1): it => {
     v(12pt, weak: true)
@@ -94,6 +109,8 @@
   }
   outline(indent: auto)
 
+
+//RESETING NUMBERING
   show heading.where(level: 1): it => {
     pagebreak()
     // Reset alle relevante tellers bij elk nieuw hoofdstuk
@@ -104,7 +121,7 @@
     it
   }
 
-  // include pagenumber and set it to 1
+// INCLUDE PAGENUMBER AND SET IT TO 1 AT FIRST PAGE OF CONTENT
   set page(numbering: "1")
   counter(page).update(1)
 

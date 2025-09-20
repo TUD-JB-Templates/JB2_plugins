@@ -32,10 +32,3 @@ Relaxing at the beach
 Relaxing at the beach
 ```
 
-```{figure} ../Figures/avatar.png
-:label: myFigure14
-:alt: Sunset at the beach
-:align: center
-
-Relaxing at the beach 
-```
