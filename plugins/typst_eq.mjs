@@ -66,10 +66,14 @@ function makeRewriter({ mappingPath, mapping, accents = 'typst' } = {}) {
   const accent = (cmd, name) => (accents === 'typst' ? `${cmd}(${name})` : name);
   const structuralRewrite = (src) =>
     src
-      .replace(/\\hat\s*\{([^{}]+)\}/g, (_m, x) => accent('hat', x))
-      .replace(/\\vec\s*\{([^{}]+)\}/g, (_m, x) => accent('vec', x))
-      .replace(/\\bar\s*\{([^{}]+)\}/g, (_m, x) => accent('overbar', x))
-      .replace(/\\overline\s*\{([^{}]+)\}/g, (_m, x) => accent('overline', x));
+      // .replace(/\\hat\s*\{([^{}]+)\}/g, (_m, x) => accent('hat', x))
+      // .replace(/\\vec\s*\{([^{}]+)\}/g, (_m, x) => accent('vec', x))
+      // .replace(/\\bar\s*\{([^{}]+)\}/g, (_m, x) => accent('overbar', x))
+      // .replace(/\\overline\s*\{([^{}]+)\}/g, (_m, x) => accent('overline', x));
+      .replace(/\\substack\s*\{([^{}]+)\}/g, (_m, inner) => {
+      // split at \\ and wrap in line()
+      const parts = inner.split(/\\\\/).map((s) => s.trim());
+      return `line(${parts.join(', ')})`;
 
   return (math) => structuralRewrite(literalRewrite(math));
 }
