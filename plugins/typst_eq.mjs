@@ -42,6 +42,13 @@ const DEFAULTS = {
   "\\\\mathbb\\{C\\}": "ℂ"
 };
 
+// replacing \hspace
+function replaceAllHspace(src) {
+  return src.replace(/\\hspace\s*\{([^{}]+)\}/g, (_m, inner) => {
+    return `h(${inner.trim()})`;
+  });
+}
+
 function loadMapping(mappingPath, inlineMap) {
   if (mappingPath) {
     const abs = path.isAbsolute(mappingPath)
@@ -115,6 +122,7 @@ function makeRewriter({ mappingPath, mapping } = {}) {
     let s = src;
     s = replaceAllTextBalanced(s);
     s = replaceAllSubstackBalanced(s);
+    s = replaceAllHspace(s);
     return s;
   };
 
