@@ -1,5 +1,25 @@
 # PDF support - custom directives
 
+## Adding plugins to your book 
+
+This page explains how to add a variety of plugins to your book.
+Each plugin can be linked individually in your myst.yml file.
+
+⚠️ Important: Always include the CSS file (only once) to ensure the custom styles are applied.
+
+Example myst.yml configuration:
+
+```{code} yaml
+:filename: myst.yml
+site:
+  template: book-theme
+  options:
+    style: https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/CSS/custom.css
+```
+
+
+
+
 ## example
 
 ```{example} Here is an example
@@ -28,21 +48,7 @@ Use this link to add support for the experiment directive when converting to pdf
 https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/experiment/experiment.mjs
 ```
 
-## iframe 
 
-```{iframe} https://www.youtube.com/embed/oL4-ipL62pQ?si=3G_VbzWoJ2cFF_A3
-:name: vid_1
-
-a great movei
-```
-
-Use this link to add support for iframes when converting to pdf:  
-
-```text
-https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/iframe/iframe.mjs
-```
-
-The iframe will be replaced by a QR code, leading to the iframe
 
 ## intermezzo
 

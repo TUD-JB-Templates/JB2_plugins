@@ -6,6 +6,7 @@ template: template.typ
 
 files:
   - template.typ
+  - components/admonition.typ
   - style.typ
   - aside_style.typ
   - LICENSE

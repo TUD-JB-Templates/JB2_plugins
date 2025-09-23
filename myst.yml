@@ -16,13 +16,20 @@ project:
   description: This is a test project for Jupyter Book plugins, with a description. Sounds good.. #preface
 
   plugins:
-    - https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/example/example.mjs
-    - plugins/experiment.mjs
+
     - https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/iframe/iframe.mjs
-    - https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/intermezzo/intermezzo.mjs
     - https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/exercise/pdf_exercise.mjs
     - plugins/aside.mjs
+<<<<<<< Updated upstream
     - plugins/typst_eq.mjs
+=======
+    - plugins/replaceElement.mjs
+
+    - typst_plugins/example.mjs
+    - typst_plugins/experiment.mjs
+    - typst_plugins/intermezzo.mjs
+
+>>>>>>> Stashed changes
     
   downloads:
     # - id: output-pdf2
@@ -44,11 +51,14 @@ project:
   - file: README.md
   - title: PDF Support
     children:
-      - file: contents/chapter_1.md
       - file: contents/pdf_support.md
   - file: contents/chapter_2.md
   - title: Typst support
+<<<<<<< Updated upstream
     children:       
+=======
+    children: 
+>>>>>>> Stashed changes
       - file: contents/typst_support.md
       - file: contents/typst_element.md
       - file: contents/typst_eq.md
