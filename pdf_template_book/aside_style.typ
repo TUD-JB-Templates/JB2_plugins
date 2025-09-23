@@ -1,4 +1,7 @@
-// Custom typst element (https://typst.app/docs/reference/)
+// Not in use, keeping this as a reference for later.
+
+// This is an example of how to create an aside style in Typst.
+// You can use this as a starting point to create your own styles.
 
 #let aside(title, body) = { 
 
