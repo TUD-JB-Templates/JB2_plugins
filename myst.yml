@@ -20,16 +20,13 @@ project:
     - https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/iframe/iframe.mjs
     - https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/exercise/pdf_exercise.mjs
     - plugins/aside.mjs
-<<<<<<< Updated upstream
     - plugins/typst_eq.mjs
-=======
     - plugins/replaceElement.mjs
 
     - typst_plugins/example.mjs
     - typst_plugins/experiment.mjs
     - typst_plugins/intermezzo.mjs
 
->>>>>>> Stashed changes
     
   downloads:
     # - id: output-pdf2
@@ -52,13 +49,8 @@ project:
   - title: PDF Support
     children:
       - file: contents/pdf_support.md
-  - file: contents/chapter_2.md
   - title: Typst support
-<<<<<<< Updated upstream
-    children:       
-=======
     children: 
->>>>>>> Stashed changes
       - file: contents/typst_support.md
       - file: contents/typst_element.md
       - file: contents/typst_eq.md
