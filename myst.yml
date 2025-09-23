@@ -17,7 +17,7 @@ project:
 
   plugins:
 
-    - https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/iframe/iframe.mjs
+    - plugins/iframe/src/pdf_iframe.mjs
     - https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/exercise/pdf_exercise.mjs
     - plugins/aside.mjs
     - plugins/typst_eq.mjs
@@ -49,6 +49,7 @@ project:
   - title: PDF Support
     children:
       - file: contents/pdf_support.md
+      - file: contents/subcontent/subsubcontent/iframeTest.md
   - title: Typst support
     children: 
       - file: contents/typst_support.md

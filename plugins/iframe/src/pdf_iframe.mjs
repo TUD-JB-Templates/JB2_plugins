@@ -19,15 +19,29 @@ const iframeTransform = {
   name: "iframe-pdf",
   doc: "Replace iframes in PDF builds with QR codes.",
   stage: "document",
-  plugin: (opts, utils) => async (tree) => {
+  plugin: (opts, utils) => async (tree, vfile) => {
     
     // Detect if we are building a PDF by checking for pdf or typst in the command line arguments
     const isPDF = process.argv.some(arg => arg.includes("pdf") || arg.includes("typst"));
+
+    //display the folder that ../ will point to    
 
     // Get all nodes for each page
     const rootChildren = tree.children[0]?.children || [];
 
     if (isPDF) {
+
+        // remove working directory from vfile
+        const relativePath = vfile.history[0].replace(process.cwd(), '');
+        console.log(`[IFRAME] Relative path: ${relativePath}`);
+        //remove filename
+        const folderPath = relativePath.substring(0, relativePath.lastIndexOf('\\'));
+        console.log(`[IFRAME] Building PDF for file: ${folderPath}`);
+
+        const images = utils.selectAll('container', tree);
+
+        // TODO add folderpath to image_folder and create if not exists, then also change the element!
+
         for (const [index, node] of rootChildren.entries()) {
             if (node.type === "container" && node.children[0]?.type === "iframe") {
                 const url = node.children[0]?.src || "No link found";
