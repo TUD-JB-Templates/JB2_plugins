@@ -2,10 +2,12 @@
 *   css file (custom.css) included in style folder. 
 */
 
-import { generateTypstNode, generateTypstElement, getAdmonitionColors } from "./typstAdmonitions/generate_admonition.mjs";
 
-const experimentStyle = getAdmonitionColors("style/custom.css", "experiment");
-
+const experimentStyle = {
+  border : `rgb(255, 0, 0)`,
+  header : `rgb(251,183,183)`,
+  body : `rgb(255,255,255)`
+}
 let getText = (node) => {
   if(node.type === "text") return node.value;
   if(node.children) return node.children.map(getText).join("");
@@ -75,16 +77,33 @@ const experimentTransform = {
       const body = getText(bodyNode);
 
       // Replace the *contents* of the node in place, somehow foreach does not work... some copy problem
-      Object.assign(node, generateTypstNode(
-        generateTypstElement(
-          "experiment",
-          experimentStyle.border,
-          experimentStyle.header,
-          experimentStyle.body,
-          title,
-          body
-        )
-      ));
+      Object.assign(node, {
+        type: 'raw',
+        lang: 'typst',
+        typst: `
+          // template_admonition.typ
+
+          #block(
+            fill: ${experimentStyle.header},
+            stroke: (left: 1pt + ${experimentStyle.border}),
+            width: 100%,
+            inset: (x: 0.8em, y: 0.4em),
+            above: 0.5em,
+            below: 0em,
+            strong("${title}"),
+          )
+
+          #block(
+            fill: ${experimentStyle.body},
+            stroke: (left: 1pt + ${experimentStyle.border}),
+            width: 100%,
+            inset: (x: 0.8em, y: 0.6em),
+            above: 0em,
+            below: 0.5em,
+            "${body}"
+          )
+        `
+      });
     });    
     
   }

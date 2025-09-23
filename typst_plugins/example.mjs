@@ -2,9 +2,11 @@
 *   css file (custom.css) included in style folder. 
 */
 
-import { generateTypstNode, generateTypstElement, getAdmonitionColors } from "./typstAdmonitions/generate_admonition.mjs";
-
-const exampleStyle = getAdmonitionColors("style/custom.css", "example");
+const exampleStyle = {
+  border: `rgb(12, 35, 64)`,
+  header: `rgb(0, 118, 194)`,
+  body: `rgb(255, 255, 255)`
+}
 
 let getText = (node) => {
   if(node.type === "text") return node.value;
@@ -75,16 +77,33 @@ const exampleTransform = {
       const body = getText(bodyNode);
 
       // Replace the *contents* of the node in place, somehow foreach does not work... some copy problem
-      Object.assign(node, generateTypstNode(
-        generateTypstElement(
-          "example",
-          exampleStyle.border,
-          exampleStyle.header,
-          exampleStyle.body,
-          title,
-          body
-        )
-      ));
+      Object.assign(node, {
+        type: 'raw',
+        lang: 'typst',
+        typst: `
+          // template_admonition.typ
+
+          #block(
+            fill: ${exampleStyle.header},
+            stroke: (left: 1pt + ${exampleStyle.border}),
+            width: 100%,
+            inset: (x: 0.8em, y: 0.4em),
+            above: 0.5em,
+            below: 0em,
+            strong("${title}"),
+          )
+
+          #block(
+            fill: ${exampleStyle.body},
+            stroke: (left: 1pt + ${exampleStyle.border}),
+            width: 100%,
+            inset: (x: 0.8em, y: 0.6em),
+            above: 0em,
+            below: 0.5em,
+            "${body}"
+          )
+        `
+      });
     });    
     
   }

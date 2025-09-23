@@ -2,9 +2,11 @@
 *   css file (custom.css) included in style folder. 
 */
 
-import { generateTypstNode, generateTypstElement, getAdmonitionColors } from "./typstAdmonitions/generate_admonition.mjs";
-
-const intermezzoStyle = getAdmonitionColors("style/custom.css", "intermezzo");
+const intermezzoStyle = {
+  border : `rgb(162, 0, 255)`, 
+  header : `rgb(218,154,255)`,
+  body : `rgb(255,255,255)`
+}
 
 let getText = (node) => {
   if(node.type === "text") return node.value;
@@ -75,16 +77,33 @@ const intermezzoTransform = {
       const body = getText(bodyNode);
 
       // Replace the *contents* of the node in place, somehow foreach does not work... some copy problem
-      Object.assign(node, generateTypstNode(
-        generateTypstElement(
-          "intermezzo",
-          intermezzoStyle.border,
-          intermezzoStyle.header,
-          intermezzoStyle.body,
-          title,
-          body
-        )
-      ));
+      Object.assign(node, {
+        type: 'raw',
+        lang: 'typst',
+        typst: `
+          // template_admonition.typ
+
+          #block(
+            fill: ${intermezzoStyle.header},
+            stroke: (left: 1pt + ${intermezzoStyle.border}),
+            width: 100%,
+            inset: (x: 0.8em, y: 0.4em),
+            above: 0.5em,
+            below: 0em,
+            strong("${title}"),
+          )
+
+          #block(
+            fill: ${intermezzoStyle.body},
+            stroke: (left: 1pt + ${intermezzoStyle.border}),
+            width: 100%,
+            inset: (x: 0.8em, y: 0.6em),
+            above: 0em,
+            below: 0.5em,
+            "${body}"
+          )
+        `
+      });
     });    
     
   }
