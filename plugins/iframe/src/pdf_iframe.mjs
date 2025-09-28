@@ -12,8 +12,10 @@
 
 import QRCode from "qrcode-generator";
 import { writeFile } from "fs/promises";
+import { existsSync, mkdirSync } from "fs";
 
-const image_folder = "./images";
+const image_folder = "qr_images";
+let image_path = "/qr_images";
 
 const iframeTransform = {
   name: "iframe-pdf",
@@ -33,17 +35,23 @@ const iframeTransform = {
 
         // remove working directory from vfile
         const relativePath = vfile.history[0].replace(process.cwd(), '');
-        console.log(`[IFRAME] Relative path: ${relativePath}`);
+
         //remove filename
         const folderPath = relativePath.substring(0, relativePath.lastIndexOf('\\'));
-        console.log(`[IFRAME] Building PDF for file: ${folderPath}`);
 
         const images = utils.selectAll('container', tree);
 
-        // TODO add folderpath to image_folder and create if not exists, then also change the element!
-
         for (const [index, node] of rootChildren.entries()) {
             if (node.type === "container" && node.children[0]?.type === "iframe") {
+
+                //check if folder exists, if not create it using the relative path
+                if (!existsSync(`.${folderPath}\\${image_folder}`)) {
+                    mkdirSync(`.${folderPath}\\${image_folder}`);
+                    console.log(`[IFRAME] Created folder: ${folderPath}\\${image_folder}`);
+                } else {
+                    console.log(`[IFRAME] Folder already exists: ${folderPath}\\${image_folder}`);
+                }
+
                 const url = node.children[0]?.src || "No link found";
 
                 // Let image name be last part of the URL
@@ -61,7 +69,7 @@ const iframeTransform = {
                     const svg = qr.createSvgTag({ cellSize: 4, margin: 2 });
 
                     // Save SVG to file
-                    const outputFile = `${image_folder}/qrcode_${node.qr_index}.svg`;
+                    const outputFile = `.${folderPath}\\${image_folder}\\qrcode_${node.qr_index}.svg`;
                     await writeFile(outputFile, svg, "utf8");
 
                     console.log(`[IFRAME] Generated QR code, saved to ${outputFile}`);
@@ -72,7 +80,7 @@ const iframeTransform = {
                     node.children = [
                         {
                             type: "image",
-                            url: `../images/qrcode_${node.qr_index}.svg`, // updated to .svg
+                            url: `qr_images/qrcode_${node.qr_index}.svg`, // updated to .svg
                             alt: "QR code",
                             title: "scan the QR code to open the link",
                             width: "200px",

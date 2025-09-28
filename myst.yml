@@ -21,7 +21,6 @@ project:
     - https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/exercise/pdf_exercise.mjs
     - plugins/aside.mjs
     - plugins/typst_eq.mjs
-    - plugins/replaceElement.mjs
 
     - typst_plugins/example.mjs
     - typst_plugins/experiment.mjs
@@ -50,6 +49,8 @@ project:
     children:
       - file: contents/pdf_support.md
       - file: contents/subcontent/subsubcontent/iframeTest.md
+      - file: contents/subcontent/iframeTest.md
+
   - title: Typst support
     children: 
       - file: contents/typst_support.md
