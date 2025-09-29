@@ -21,6 +21,7 @@ project:
     - https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/exercise/pdf_exercise.mjs
     - plugins/aside.mjs
     - plugins/typst_eq.mjs
+    - plugins/read-csv.mjs
 
     - typst_plugins/example.mjs
     - typst_plugins/experiment.mjs

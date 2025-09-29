@@ -1,3 +1,7 @@
+---
+Datum_id: somefile.csv
+---
+
 # PDF support - custom directives
 
 ## Adding plugins to your book 
