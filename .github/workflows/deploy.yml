@@ -37,7 +37,10 @@ jobs:
         with:
           node-version: 18.x
       - name: Install MyST Markdown
-        run: npm install -g mystmd
+        run: |
+          npm install -g mystmd 
+          npm install js-yaml 
+          # add any other deps your plugin uses here
       - name: Build HTML Assets
         run: myst build --html
       - name: Upload artifact
