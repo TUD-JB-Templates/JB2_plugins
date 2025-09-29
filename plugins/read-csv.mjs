@@ -4,7 +4,6 @@
 import { readFileSync, existsSync } from 'fs';
 import { resolve } from 'path';
 import yaml from 'js-yaml';
-import e from 'express';
 
 // helper: parse frontmatter from a Markdown file
 function getFrontmatter(srcPath) {
@@ -29,16 +28,16 @@ const csvNoticeTransform = {
         // remove working directory from vfile
         const relativePath = file.path.replace(process.cwd(), '');
 
-        // parse frontmatter manually from the source file
-        console.log(`[CSV NOTICE] Checking frontmatter in: ${relativePath}`);
+        // parse frontmatter manually from the source file. console log statement for debugging
+        console.log(`[CSV] Checking frontmatter in: ${relativePath}`);
         const fm = getFrontmatter(file.path);
 
         if (!fm || !fm.Datum_id) return node;
 
-        console.log(fm);
+        // log frontmatter for debugging
+        console.log('csv found: ',fm);
 
-
-        // resolve CSV path (adapt if needed)
+        // resolve CSV path
         const csvPath = resolve('data', fm.Datum_id);
 
         if (existsSync(csvPath)) {
