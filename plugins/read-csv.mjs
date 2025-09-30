@@ -61,7 +61,6 @@ const csvNoticeTransform = {
         // log first row for debugging
         console.log('First row of CSV:', records[0]);
 
-        console.log(`CSV file found: ${csvPath}`);
 
         // prepend to node, "found CSV file at ..."
         node.children.unshift({
