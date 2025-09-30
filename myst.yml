@@ -58,6 +58,10 @@ project:
       - file: contents/typst_support.md
       - file: contents/typst_element.md
       - file: contents/typst_eq.md
+  
+  - title: gh-releases
+    children:
+      - file: contents/gh-release.md
 
 site:
   template: book-theme
