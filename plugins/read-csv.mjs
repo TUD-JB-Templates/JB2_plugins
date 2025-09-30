@@ -3,6 +3,7 @@
 
 import { readFileSync, existsSync } from 'fs';
 import { resolve } from 'path';
+import { parse } from 'csv-parse/sync';
 import yaml from 'js-yaml';
 
 // helper: parse frontmatter from a Markdown file
@@ -40,20 +41,34 @@ const csvNoticeTransform = {
         // resolve CSV path
         const csvPath = resolve('data', fm.Datum_id);
 
-        if (existsSync(csvPath)) {
-            console.log(`CSV file found: ${csvPath}`);
-
-            // prepend to node, "found CSV file at ..."
-            node.children.unshift({
-                type: 'paragraph',
-                children: [{
-                    type: 'text',
-                    value: `Found CSV file at: ${csvPath}`
-                }]
-            });
-        } else {
+        // Exit if CSV path does not exist, check using existsSync
+        if (!existsSync(csvPath)) {
             console.warn(`CSV file NOT found: ${csvPath}`);
+            return node;
         }
+
+        // read CSV contents
+        const csvContent = readFileSync(csvPath, 'utf-8');
+
+        // parse CSV into array of objects
+        const records = parse(csvContent, {
+            columns: true,   // first row as headers
+            skip_empty_lines: true
+        });
+
+        // log first row for debugging
+        console.log('First row of CSV:', records[0]);
+
+        console.log(`CSV file found: ${csvPath}`);
+
+        // prepend to node, "found CSV file at ..."
+        node.children.unshift({
+            type: 'paragraph',
+            children: [{
+                type: 'text',
+                value: `Found CSV file at: ${csvPath}`
+            }]
+        });
 
         return node;
     };

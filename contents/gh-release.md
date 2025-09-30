@@ -10,7 +10,7 @@ To release a single .mjs file:
 
 - Add a tag to the release. Tags can be any name, but they're usually version numbers to indicate a release point. 
 
-- Add a title and a description. The published release will include a contributors section with an avatar list of all the @mentioned users.
+- Add a title and a description. The published release will include a contributors section with an avatar list of all the @ mentioned users.
 
 - Attach .mjs file in the dropbox. 
 
