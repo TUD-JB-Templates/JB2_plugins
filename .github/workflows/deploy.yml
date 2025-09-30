@@ -39,7 +39,7 @@ jobs:
       - name: Install MyST Markdown
         run: |
           npm install -g mystmd 
-          npm install js-yaml qrcode-generator express
+          npm install js-yaml qrcode-generator express csv-parse
           # add any other deps your plugin uses here
       - name: Build HTML Assets
         run: myst build --html

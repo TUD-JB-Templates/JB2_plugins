@@ -1,6 +1,8 @@
 // See issue https://github.com/jupyter-book/mystmd/issues/1616?utm_source=chatgpt.com
 // with code https://github.com/jupyter-book/myst-enhancement-proposals/blob/main/mep.mjs
 
+// TODO: als dit een plugin wordt, gebruik esbuild voor alle packages die gebruikt worden
+
 import { readFileSync, existsSync } from 'fs';
 import { resolve } from 'path';
 import { parse } from 'csv-parse/sync';
