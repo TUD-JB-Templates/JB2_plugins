@@ -53,6 +53,10 @@ project:
       - file: contents/subcontent/subsubcontent/iframeTest.md
       - file: contents/subcontent/iframeTest.md
 
+  - title: cool stuff
+    children: 
+      - file: contents/csvread.md 
+      
   - title: Typst support
     children: 
       - file: contents/typst_support.md
