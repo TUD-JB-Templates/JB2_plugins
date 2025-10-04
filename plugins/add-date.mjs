@@ -5,7 +5,6 @@
 
 import { readFileSync, existsSync } from 'fs';
 import { resolve } from 'path';
-import { parse } from 'csv-parse/sync';
 import yaml from 'js-yaml';
 
 // helper: parse frontmatter from a Markdown file
@@ -31,57 +30,32 @@ const csvNoticeTransform = {
         // remove working directory from vfile
         const relativePath = file.path.replace(process.cwd(), '');
 
-        // get filename which is after the last \
-        const filename = relativePath.substring(relativePath.lastIndexOf('\\') + 1);
-
         // parse frontmatter manually from the source file. console log statement for debugging
-        console.log(`[CSV] Checking frontmatter in: ${relativePath} for ${filename}`);
+        console.log(`[date] Checking frontmatter in: ${relativePath}`);
         const fm = getFrontmatter(file.path);
 
-        if (!fm || !fm.csv_name) return node;
+        //Check if updated exists in frontmatter, if so add date to top of document
+        if (fm?.updated) {
+            // log frontmatter for debugging
+        console.log('Date found: ',fm.updated);
 
-        // log frontmatter for debugging
-        console.log('csv found: ',fm);
-
-        // resolve CSV path
- 
-        // Exit if CSV path does not exist, check using existsSync
-        if (!existsSync(fm.csv_name)) {
-            console.warn(`CSV file NOT found: ${fm.csv_name}`);
-            return node;
-        }
-
-        // read CSV contents
-        const csvContent = readFileSync(fm.csv_name, 'utf-8');
-
-        // parse CSV into array of objects
-        const records = parse(csvContent, {
-            columns: true,   // first row as headers
-            skip_empty_lines: true
-        });
-
-        // log first row for debugging
-        console.log('First row of CSV:', records[0]);
-
-        let date = ""
-
-        for (const record of records) {
-          if (record.Name === filename) {
-            console.log(`Found matching record for ${filename}: Last Edited = ${record['Last Edited']}`);
-            date = record['Last Edited'];
-          }
-        }
-
-
-        // prepend to node, "found CSV file at ..."
         node.children.unshift({
             type: 'div',
-            class: 'font-light text-sm',
+            class: 'font-light text-sm mb-4',
             children: [{
                 type: 'text',
-                value: `Updated: ${date}`
+                value: `Updated: ${fm.updated}`
             }]
         });
+        } else {
+            node.children.unshift({
+                type: 'div',
+                class: 'font-light text-sm mb-4',
+                children: []
+            });
+        };
+
+        
 
         return node;
     };

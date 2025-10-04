@@ -22,7 +22,9 @@ project:
     - https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/exercise/pdf_exercise.mjs
     - plugins/aside.mjs
     - plugins/typst_eq.mjs
+    - plugins/add-date.mjs
     - plugins/read-csv.mjs
+
 
     - typst_plugins/example.mjs
     - typst_plugins/experiment.mjs
@@ -47,11 +49,13 @@ project:
 
   toc:
   - file: README.md
+  - title: General book plugins
+    children:
+      - file: contents/add-date-frontmatter.md
+      - file: contents/add-date-csv.md
   - title: PDF Support
     children:
       - file: contents/pdf_support.md
-      - file: contents/subcontent/subsubcontent/iframeTest.md
-      - file: contents/subcontent/iframeTest.md
 
   - title: Typst support
     children: 
@@ -66,6 +70,6 @@ project:
 site:
   template: book-theme
   options:
-    style: https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/CSS/custom.css
+    style: style/custom.css
   #   favicon: favicon.ico
   #   logo: site_logo.png

@@ -1,6 +1,11 @@
 
 /* Code toegevoegd 17/05. Leuke kleurtjes zodat het makkelijk te zien is wat waar komt */
 
+/* Laat datum natuurlijker overkomen */
+#skip-to-frontmatter {
+  margin-bottom: 0;
+}
+
 /*Title color in dark mode*/
 .dark aside.admonition-experiment .dark\:text-white {
    color: rgb(23 25 25); 

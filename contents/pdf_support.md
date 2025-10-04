@@ -1,10 +1,12 @@
 ---
-Datum_id: somefile.csv
+updated: October 4, 2025
 ---
 
 # PDF support - custom directives
 
 ## Adding plugins to your book 
+
+<div class="text-gradient" style="font-weight: bold;">Here's my <em>div</em></div>
 
 This page explains how to add a variety of plugins to your book.
 Each plugin can be linked individually in your myst.yml file.

@@ -1,0 +1,4 @@
+- format: typst
+  template: ./pdf_template_book #lapreprint-typst
+  output: exports/Test_plugin_typst.pdf
+  id: output-pdf1
