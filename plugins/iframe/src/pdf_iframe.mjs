@@ -42,6 +42,14 @@ const iframeTransform = {
         const images = utils.selectAll('container', tree);
 
         for (const [index, node] of rootChildren.entries()) {
+
+            // check if figure, then print
+            if(node.kind === "figure"){
+                console.log(node);
+
+            }
+            
+
             if (node.type === "container" && node.children[0]?.type === "iframe") {
 
                 //check if folder exists, if not create it using the relative path
@@ -53,6 +61,11 @@ const iframeTransform = {
                 }
 
                 const url = node.children[0]?.src || "No link found";
+
+                let youtube_video_id = url.match(/youtube\.com.*(\?v=|\/embed\/)(.{11})/).pop();
+                let thumbnail = `https://img.youtube.com/vi/${youtube_video_id}/0.jpg`;
+
+                let caption = node.children[1]?.children[0]?.children[0]?.value || " - ";
 
                 // Let image name be last part of the URL
                 const urlParts = url.split('/');
@@ -74,32 +87,42 @@ const iframeTransform = {
 
                     console.log(`[IFRAME] Generated QR code, saved to ${outputFile}`);
 
-                    // Make a figure out of it
                     node.type = "container";
                     node.kind = "figure";
-                    node.children = [
-                        {
-                            type: "image",
-                            url: `qr_images/qrcode_${node.qr_index}.svg`, // updated to .svg
-                            alt: "QR code",
-                            title: "scan the QR code to open the link",
-                            width: "200px",
-                            align: "center"
+                    node.children = [{
+                            type: 'container',
+                            kind: 'figure',
+                            subcontainer: true,
+                            children: [{
+                                    type: "image",
+                                    url: `qr_images/qrcode_${node.qr_index}.svg`, // updated to .svg
+                                    alt: "QR code",
+                                } 
+                                ]
                         },
                         {
-                            type: "caption",
+                            type: 'container',
+                            kind: 'figure',
+                            subcontainer: true,
+                            children: [{
+                                type: "image",
+                                url: thumbnail, // updated to .svg
+                                alt: "Thumbnail",
+                                title: " - ",
+                                align: "center"
+                            }
+                        ]},
+                        { type: "caption",
                             children: [
-                                {
-                                    type: "paragraph",
+                                { type: "paragraph",
                                     children: [
-                                        { type: "text", value: "scan the QR code to open the link or click " },
+                                        { type: "text", value: `${caption} - Scan the QR code or click ` },
                                         { type: "link", url: url, children: [{ type: "text", value: "here" }] },
-                                        { type: "text", value: " to open the link." }
-                                    ]
-                                }
+                                        { type: "text", value: " to go to the video." }
+                                    ]}
                             ]
                         }
-                    ];
+                    ]
                 } catch (err) {
                     console.log("[IFRAME] Error generating QR code:", err);
                 }

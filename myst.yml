@@ -17,8 +17,8 @@ project:
 
   plugins:
 
-    # - plugins/iframe/src/pdf_iframe.mjs
-    - plugins/iframe-to-thumbnail-pdf.mjs
+    - plugins/iframe/src/pdf_iframe.mjs
+    # - plugins/iframe-to-thumbnail-pdf.mjs
     - https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/exercise/pdf_exercise.mjs
     - plugins/aside.mjs
     - plugins/typst_eq.mjs

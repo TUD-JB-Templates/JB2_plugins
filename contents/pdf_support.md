@@ -2,8 +2,6 @@
 
 ## Adding plugins to your book 
 
-<div class="text-gradient" style="font-weight: bold;">Here's my <em>div</em></div>
-
 This page explains how to add a variety of plugins to your book.
 Each plugin can be linked individually in your myst.yml file.
 
@@ -24,7 +22,7 @@ site:
 ```{iframe} https://www.youtube.com/embed/oL4-ipL62pQ?si=3G_VbzWoJ2cFF_A3
 :name: vid_1
 
-a great movei
+a great movie, and a great caption
 ```
 
 Use this link to add support for iframes when converting to pdf:  
