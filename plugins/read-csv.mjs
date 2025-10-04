@@ -31,8 +31,9 @@ const csvNoticeTransform = {
         // remove working directory from vfile
         const relativePath = file.path.replace(process.cwd(), '');
 
-        // get filename which is after the last \
-        const filename = relativePath.substring(relativePath.lastIndexOf('\\') + 1);
+        // get filename in a general way, so it does not matter if it is / or \ in the path
+        const pathParts = relativePath.split(/[/\\]/);
+        const filename = pathParts[pathParts.length - 1];
 
         // parse frontmatter manually from the source file. console log statement for debugging
         console.log(`[CSV] Checking frontmatter in: ${relativePath} for ${filename}`);
