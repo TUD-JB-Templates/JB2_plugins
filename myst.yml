@@ -57,6 +57,10 @@ project:
     children:
       - file: contents/pdf_support.md
 
+  - title: cool stuff
+    children: 
+      - file: contents/csvread.md 
+      
   - title: Typst support
     children: 
       - file: contents/typst_support.md

@@ -1,7 +1,3 @@
----
-updated: October 4, 2025
----
-
 # PDF support - custom directives
 
 ## Adding plugins to your book 
