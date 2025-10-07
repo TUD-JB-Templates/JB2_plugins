@@ -22,8 +22,8 @@ project:
     - https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/exercise/pdf_exercise.mjs
     - plugins/aside.mjs
     - plugins/typst_eq.mjs
-    - plugins/add-date.mjs
-    # - plugins/read-csv.mjs
+    - plugins/update-date-frontmatter/update-date-frontmatter.mjs
+    - plugins/read-csv.mjs
 
 
     - typst_plugins/example.mjs
