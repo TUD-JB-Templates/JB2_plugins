@@ -74,6 +74,6 @@ project:
 site:
   template: book-theme
   options:
-    style: style/custom.css
+    style: ./style/custom.css
   #   favicon: favicon.ico
   #   logo: site_logo.png
