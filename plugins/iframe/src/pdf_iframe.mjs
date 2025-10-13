@@ -26,8 +26,6 @@ const iframeTransform = {
     // Detect if we are building a PDF by checking for pdf or typst in the command line arguments
     const isPDF = process.argv.some(arg => arg.includes("pdf") || arg.includes("typst"));
 
-    //display the folder that ../ will point to    
-
     // Get all nodes for each page
     const rootChildren = tree.children[0]?.children || [];
 
@@ -43,27 +41,14 @@ const iframeTransform = {
 
         for (const [index, node] of rootChildren.entries()) {
 
-            // check if figure, then print
-            if(node.kind === "figure"){
-                console.log(node);
-
-            }
-            
-
             if (node.type === "container" && node.children[0]?.type === "iframe") {
 
                 //check if folder exists, if not create it using the relative path
                 if (!existsSync(`.${folderPath}\\${image_folder}`)) {
                     mkdirSync(`.${folderPath}\\${image_folder}`);
-                    console.log(`[IFRAME] Created folder: ${folderPath}\\${image_folder}`);
-                } else {
-                    console.log(`[IFRAME] Folder already exists: ${folderPath}\\${image_folder}`);
                 }
 
                 const url = node.children[0]?.src || "No link found";
-
-                let youtube_video_id = url.match(/youtube\.com.*(\?v=|\/embed\/)(.{11})/).pop();
-                let thumbnail = `https://img.youtube.com/vi/${youtube_video_id}/0.jpg`;
 
                 let caption = node.children[1]?.children[0]?.children[0]?.value || " - ";
 
@@ -85,7 +70,42 @@ const iframeTransform = {
                     const outputFile = `.${folderPath}\\${image_folder}\\qrcode_${node.qr_index}.svg`;
                     await writeFile(outputFile, svg, "utf8");
 
-                    console.log(`[IFRAME] Generated QR code, saved to ${outputFile}`);
+                    //Check if the embed is a youtube link
+                    if (!url.includes("youtube")) {
+
+                        //Replace node with just qr code to the link
+                        node.type = "container";
+                        node.kind = "figure";
+                        node.children = [{
+                                type: 'container',
+                                kind: 'figure',
+                                subcontainer: true,
+                                children: [{
+                                        type: "image",
+                                        url: `qr_images/qrcode_${node.qr_index}.svg`, // updated to .svg
+                                        width: "200px",
+                                        alt: "QR code",
+                                    } 
+                                ]},
+                                { 
+                                    type: "caption",
+                                    children: [
+                                        { type: "paragraph",
+                                            children: [
+                                                { type: "text", value: `${caption} - Scan the QR code or click ` },
+                                                { type: "link", url: url, children: [{ type: "text", value: "here" }] },
+                                                { type: "text", value: " to go to the video." }
+                                            ]}
+                                    ]
+                                }
+                            ]
+                        continue; // Skip non-YouTube links
+                    }
+
+                    // Else keep going
+
+                    let youtube_video_id = url.match(/youtube\.com.*(\?v=|\/embed\/)(.{11})/).pop();
+                    let thumbnail = `https://img.youtube.com/vi/${youtube_video_id}/0.jpg`;
 
                     node.type = "container";
                     node.kind = "figure";

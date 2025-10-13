@@ -56,6 +56,7 @@ project:
   - title: PDF Support
     children:
       - file: contents/pdf_support.md
+      - file: contents/iframe.md
 
   - title: cool stuff
     children: 
