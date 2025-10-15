@@ -1,5 +1,7 @@
 # PDF support - custom directives
 
+This text is responsible for the headers lining up in typst...
+
 ## Adding plugins to your book 
 
 This page explains how to add a variety of plugins to your book.
@@ -63,6 +65,7 @@ https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/experiment/exp
 
 ## intermezzo
 
+
 ```{intermezzo} this is an intermezzo
 
 with a description
@@ -75,7 +78,7 @@ Use this link to add support for intermezzo's when converting to pdf:
 https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/intermezzo/intermezzo.mjs
 ```
 
-# exercises
+## exercises
 
 ```{exercise} my-exercise
 :label: my-exercise

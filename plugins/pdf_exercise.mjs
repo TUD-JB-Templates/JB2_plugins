@@ -14,8 +14,9 @@ const exerciseTransform = {
   doc: "Replace exercises in PDF builds.",
   stage: "document",
   plugin: (opts, utils) => (tree) => {
-    // Detect if we are building a PDF
+    // Detect if we are building a PDF or Typst
     const isPDF = process.argv.some(arg => arg.includes("pdf"));
+    const isTypst = process.argv.some(arg => arg.includes("typst"));
 
     // Keep track of the exercise numbers
     const labelMap = new Map();
@@ -30,7 +31,7 @@ const exerciseTransform = {
     });
 
 
-    if (isPDF) {
+    if (isPDF || isTypst) {
       // Only process the main document's children
       const rootChildren = tree.children[0]?.children || [];
 
