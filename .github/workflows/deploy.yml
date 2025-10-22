@@ -66,17 +66,25 @@ jobs:
           path: _build/html
 
   # 2️⃣ Collect and deploy all language builds
-  deploy:
+    deploy:
     needs: build
     runs-on: ubuntu-latest
     if: always()
 
     steps:
-      - name: Checkout gh-pages branch (or create it)
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          ref: gh-pages
+      - name: Checkout (create gh-pages if missing)
+        run: |
+          git init
+          git remote add origin "https://github.com/${{ github.repository }}.git"
+          git fetch origin
+          if git show-ref --verify --quiet refs/remotes/origin/gh-pages; then
+            echo "✅ Found existing gh-pages branch"
+            git checkout gh-pages
+          else
+            echo "🚀 No gh-pages branch found, creating new one..."
+            git checkout --orphan gh-pages
+            git reset --hard
+          fi
 
       - name: Prepare deployment folder
         run: |
@@ -121,3 +129,4 @@ jobs:
 
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
+
