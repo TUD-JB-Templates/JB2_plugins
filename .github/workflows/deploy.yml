@@ -1,4 +1,4 @@
-name: Deploy Multi-Language MyST Books
+name: Deploy Multi-Language MyST Books 🌍
 
 on:
   push:
@@ -14,14 +14,15 @@ permissions:
 
 env:
   PRIMARY_BRANCH: main
-  BEHAVIOR_PRIMARY: redirect  # or copy / move
+  BEHAVIOR_PRIMARY: redirect  # redirect | copy | move
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
-  # 1️⃣ Detect branches and deploy each book
+  # 1️⃣ Build each branch (main or language-xx)
   build:
     runs-on: ubuntu-latest
-
+    outputs:
+      lang: ${{ steps.lang.outputs.lang }}
     steps:
       - name: Checkout branch
         uses: actions/checkout@v4
@@ -38,45 +39,43 @@ jobs:
           elif [[ "$branch" =~ ^language-([a-z]+)$ ]]; then
             lang="${BASH_REMATCH[1]}"
           else
-            lang="$branch"
+            echo "⚠️ Unknown branch naming format, skipping build."
+            exit 0
           fi
           echo "📘 Branch: $branch"
           echo "🌐 Language code: $lang"
           echo "lang=$lang" >> $GITHUB_OUTPUT
+          echo "LANGUAGE_CODE=$lang" >> $GITHUB_ENV
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
-      - name: Install dependencies
+      - name: Install MyST Markdown
         run: |
-          python -m pip install -U pip
-          pip install mystmd
+          npm install -g mystmd
+          myst --version
 
-      - name: Build MyST book
+      - name: Build MyST Book
         run: |
+          echo "🛠️ Building MyST site for language: ${LANGUAGE_CODE}"
           myst build --html
+          echo "✅ Build complete for ${LANGUAGE_CODE}"
           ls -R _build/html || echo "⚠️ No HTML output found"
 
-      - name: Upload site artifact
+      - name: Upload artifact for this language
         uses: actions/upload-artifact@v4
         with:
           name: ${{ steps.lang.outputs.lang }}
           path: _build/html
 
-  # 2️⃣ Collect and deploy all language builds
+  # 2️⃣ Deploy all detected builds to GitHub Pages
   deploy:
     needs: build
     runs-on: ubuntu-latest
     if: always()
-
     steps:
       - name: Checkout (create gh-pages if missing)
         run: |
           git init
           git remote add origin "https://github.com/${{ github.repository }}.git"
-          git fetch origin
+          git fetch origin || true
           if git show-ref --verify --quiet refs/remotes/origin/gh-pages; then
             echo "✅ Found existing gh-pages branch"
             git checkout gh-pages
@@ -87,29 +86,40 @@ jobs:
           fi
 
       - name: Prepare deployment folder
-        run: |
-          mkdir -p final
-          echo "Preparing final deployment structure..."
+        run: mkdir -p final site
 
-      - name: Download all language artifacts
+      - name: Download all artifacts
         uses: actions/download-artifact@v4
         with:
           path: final
 
-      - name: Move each artifact into language folder
+      - name: Organize language folders
+        id: organize
         run: |
           cd final
+          BASE_URL="https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}"
+          echo "## 🌍 Languages Found" >> $GITHUB_STEP_SUMMARY
+          echo "| Language | Folder | URL |" >> $GITHUB_STEP_SUMMARY
+          echo "|-----------|---------|-----|" >> $GITHUB_STEP_SUMMARY
           for dir in */; do
             lang="${dir%/}"
             mkdir -p "../site/${lang}"
             cp -r "${dir}/." "../site/${lang}/"
+            echo "| ${lang} | /${lang}/ | ${BASE_URL}/${lang}/ |" >> $GITHUB_STEP_SUMMARY
           done
           cd ..
 
-      - name: Handle primary branch behavior
+      - name: Ensure at least English is present
+        run: |
+          if [ ! -d "site/en" ]; then
+            echo "❌ No English folder found. Did you run this from the 'main' branch?"
+            exit 1
+          fi
+
+      - name: Handle root redirect or copy
         run: |
           cd site
-          if [ "${PRIMARY_BRANCH}" = "main" ] && [ "${BEHAVIOR_PRIMARY}" = "redirect" ]; then
+          if [ "${BEHAVIOR_PRIMARY}" = "redirect" ]; then
             echo '<meta http-equiv="refresh" content="0; url=en/">' > index.html
             echo "🌍 Root will redirect to /en/"
           elif [ "${BEHAVIOR_PRIMARY}" = "copy" ]; then
@@ -128,5 +138,20 @@ jobs:
           path: site
 
       - name: Deploy to GitHub Pages
+        id: deployment
         uses: actions/deploy-pages@v4
 
+      - name: Deployment Summary
+        run: |
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## 🚀 Deployment Summary" >> $GITHUB_STEP_SUMMARY
+          echo "Repository: **${{ github.repository }}**" >> $GITHUB_STEP_SUMMARY
+          echo "Deployed to: [${{ steps.deployment.outputs.page_url }}](${{ steps.deployment.outputs.page_url }})" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### 🧭 Root behavior"
+          echo "- Mode: **${BEHAVIOR_PRIMARY}**"
+          echo "- Root URL redirects to [${{ steps.deployment.outputs.page_url }}/en/]" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### ✅ Languages published:"
+          echo "- English → [${{ steps.deployment.outputs.page_url }}/en/]" >> $GITHUB_STEP_SUMMARY
+          echo "- Additional languages (if present) listed above 👆" >> $GITHUB_STEP_SUMMARY
