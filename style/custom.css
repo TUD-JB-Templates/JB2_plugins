@@ -1,5 +1,9 @@
 
 /* Code toegevoegd 17/05. Leuke kleurtjes zodat het makkelijk te zien is wat waar komt */
+/* Prevent horizontal overflow caused by 100vw calculations */
+html, body {
+  overflow-x: hidden !important;
+}
 
 /* Laat datum natuurlijker overkomen */
 #skip-to-frontmatter {
