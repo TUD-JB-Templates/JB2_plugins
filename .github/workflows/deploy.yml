@@ -63,4 +63,7 @@ jobs:
           fi
 
           echo "✅ Detected language code: ${LANG_CODE}"
-          ech
+          echo "lang_code=${LANG_CODE}" >> $GITHUB_OUTPUT
+          echo "BASE_URL=/${{ github.event.repository.name }}/${LANG_CODE}" >> $GITHUB_ENV
+          echo "deployed_url=https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/${LANG_CODE}/" >> $GITHUB_OUTPUT
+          echo "skip=false" >> $GITHUB_OUTPUT
