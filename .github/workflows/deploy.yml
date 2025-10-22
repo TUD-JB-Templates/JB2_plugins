@@ -13,7 +13,7 @@ permissions:
 
 env:
   PRIMARY_BRANCH: main
-  BEHAVIOR_PRIMARY: copy   # ✅ serve English at / and /en/
+  BEHAVIOR_PRIMARY: redirect  # redirect | copy | move
   NODE_VERSION: "18"
 
 concurrency:
@@ -21,7 +21,7 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  # 1️⃣ Discover remote branches (main + language-*)
+  # 1) Discover ALL remote branches (except gh-pages) so we can build them all
   get-branches:
     runs-on: ubuntu-latest
     outputs:
@@ -47,11 +47,13 @@ jobs:
           echo "Found branches:"
           echo "$branches" | sed 's/^/ - /'
 
-          # Convert to JSON array
+          # Convert to compact JSON array
           json=$(printf '%s\n' "$branches" | jq -R . | jq -s -c .)
+
+          echo "JSON: $json"
           echo "branches=$json" >> "$GITHUB_OUTPUT"
 
-  # 2️⃣ Build each branch
+  # 2) Build every branch in a matrix
   build:
     needs: get-branches
     if: ${{ needs.get-branches.outputs.branches != '[]' }}
@@ -69,18 +71,23 @@ jobs:
           fetch-depth: 0
           submodules: true
 
-      - name: Determine publish folder
+      - name: Determine publish folder (lang or branch)
         id: map
         shell: bash
         run: |
           BRANCH="${{ matrix.branch }}"
 
+          # Map branch → folder
+          # main → en
+          # language-xx → xx
+          # everything else → sanitized branch name (preview)
           if [ "$BRANCH" = "main" ]; then
             FOLDER="en"
           elif [[ "$BRANCH" =~ ^language-([A-Za-z0-9-]+)$ ]]; then
             FOLDER="${BASH_REMATCH[1]}"
           else
-            FOLDER="$(echo "$BRANCH" | tr '/\":<>|*?\\' '-' )"
+            # sanitize branch to be a safe folder name
+            FOLDER="$(echo "$BRANCH" | tr '/":<>|*?\\' '-' )"
           fi
 
           echo "Branch: $BRANCH"
@@ -93,6 +100,14 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
+      - name: Install plugin dependencies
+        run: |
+          echo "📦 Installing additional plugin dependencies..."
+          npm install -g mystmd \
+            qrcode-generator \
+            js-yaml \
+            csv-parse
+
       - name: Install MyST Markdown CLI
         run: npm install -g mystmd
 
@@ -103,7 +118,7 @@ jobs:
           echo "Building for folder: ${{ steps.map.outputs.folder }}"
           echo "Using BASE_URL: $BASE_URL"
           myst build --html
-          test -f _build/html/index.html || (echo "❌ No _build/html/index.html produced" && exit 1)
+          test -f _build/html/index.html || (echo "No _build/html/index.html produced" && exit 1)
 
       - name: Upload artifact for this branch
         uses: actions/upload-artifact@v4
@@ -111,7 +126,7 @@ jobs:
           name: ${{ steps.map.outputs.folder }}
           path: _build/html
 
-  # 3️⃣ Combine builds and deploy
+  # 3) Assemble all artifacts into one site + deploy to GitHub Pages
   deploy:
     needs: build
     runs-on: ubuntu-latest
@@ -125,7 +140,7 @@ jobs:
         with:
           path: final
 
-      - name: Organize folders (languages)
+      - name: Organize folders (languages & previews)
         id: organize
         shell: bash
         run: |
@@ -134,6 +149,7 @@ jobs:
           echo "| Folder | Source Branch | Public URL |" >> $GITHUB_STEP_SUMMARY
           echo "|--------|---------------|------------|" >> $GITHUB_STEP_SUMMARY
 
+          # Move each artifact into site/<folder>
           shopt -s nullglob
           for dir in final/*; do
             [ -d "$dir" ] || continue
@@ -143,20 +159,41 @@ jobs:
             echo "| ${folder} | (see artifact name) | ${BASE_URL}/${folder}/ |" >> $GITHUB_STEP_SUMMARY
           done
 
+          # Guarantee .nojekyll at site root to avoid Jekyll processing
           touch site/.nojekyll
 
+          # Ensure there is at least English
           if [ ! -d site/en ]; then
-            echo "❌ No English folder found (site/en missing)." >&2
+            echo "❌ No English folder found (site/en missing). Did 'main' build succeed?" >&2
             exit 1
           fi
 
-      - name: Root behavior (copy English to /)
+      - name: Root behavior (redirect/copy/move)
         shell: bash
         run: |
           cd site
-          echo "Copying English version to root..."
-          cp -r en/* .
+          case "${BEHAVIOR_PRIMARY}" in
+            redirect)
+              # Redirect root → /en/
+              echo '<!doctype html><meta charset="utf-8"><meta http-equiv="refresh" content="0; url=en/"><title>Redirecting…</title><script>location.replace("en/")</script>' > index.html
+              echo "Root will redirect to /en/"
+              ;;
+            copy)
+              cp -r en/* .
+              echo "Root will COPY /en/ to /"
+              ;;
+            move)
+              mv en/* .
+              rmdir en || true
+              echo "Root will MOVE /en/ to / (removing /en/)"
+              ;;
+            *)
+              echo "Unknown BEHAVIOR_PRIMARY='${BEHAVIOR_PRIMARY}', defaulting to redirect."
+              echo '<meta http-equiv="refresh" content="0; url=en/">' > index.html
+              ;;
+          esac
           cd ..
+
 
       - name: Upload Pages artifact (complete site)
         uses: actions/upload-pages-artifact@v3
@@ -175,10 +212,9 @@ jobs:
           echo "Root: [${{ steps.deployment.outputs.page_url }}](${{ steps.deployment.outputs.page_url }})" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### 🧭 Behavior"
-          echo "- PRIMARY_BRANCH: \`${{ env.PRIMARY_BRANCH }}\` (English)" >> $GITHUB_STEP_SUMMARY
+          echo "- PRIMARY_BRANCH: \`${{ env.PRIMARY_BRANCH }}\` (expected English)" >> $GITHUB_STEP_SUMMARY
           echo "- BEHAVIOR_PRIMARY: \`${{ env.BEHAVIOR_PRIMARY }}\`" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### 🔗 URLs"
+          echo "### 🔗 Common URLs"
           echo "- English → [${{ steps.deployment.outputs.page_url }}en/]" >> $GITHUB_STEP_SUMMARY
-          echo "- Root    → [${{ steps.deployment.outputs.page_url }}](${{ steps.deployment.outputs.page_url }})" >> $GITHUB_STEP_SUMMARY
-          echo "- Dutch   → [${{ steps.deployment.outputs.page_url }}nl/] (if \`language-nl\` exists)" >> $GITHUB_STEP_SUMMARY
+          echo "- Dutch   → [${{ steps.deployment.outputs.page_url }}nl/] (if a \`language-nl\` branch exists)" >> $GITHUB_STEP_SUMMARY
