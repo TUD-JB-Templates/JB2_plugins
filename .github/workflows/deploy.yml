@@ -66,7 +66,7 @@ jobs:
           path: _build/html
 
   # 2️⃣ Collect and deploy all language builds
-    deploy:
+  deploy:
     needs: build
     runs-on: ubuntu-latest
     if: always()
