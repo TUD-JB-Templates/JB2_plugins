@@ -167,12 +167,7 @@ jobs:
           case "${BEHAVIOR_PRIMARY}" in
             redirect)
               # Redirect root → /en/
-              cat > index.html <<'HTML'
-              <!doctype html><meta charset="utf-8">
-              <meta http-equiv="refresh" content="0; url=en/">
-              <title>Redirecting…</title>
-              <script>location.replace('en/')</script>
-              HTML
+              echo '<!doctype html><meta charset="utf-8"><meta http-equiv="refresh" content="0; url=en/"><title>Redirecting…</title><script>location.replace("en/")</script>' > index.html
               echo "Root will redirect to /en/"
               ;;
             copy)
@@ -185,11 +180,12 @@ jobs:
               echo "Root will MOVE /en/ to / (removing /en/)"
               ;;
             *)
-              echo "Unknown BEHAVIOR_PRIMARY='${BEHAVIOR_PRIMARY}', using redirect."
+              echo "Unknown BEHAVIOR_PRIMARY='${BEHAVIOR_PRIMARY}', defaulting to redirect."
               echo '<meta http-equiv="refresh" content="0; url=en/">' > index.html
               ;;
           esac
           cd ..
+
 
       - name: Upload Pages artifact (complete site)
         uses: actions/upload-pages-artifact@v3
