@@ -1,10 +1,10 @@
-name: Build and Deploy MyST (multi-language, shared gh-pages)
+name: Build & Deploy MyST (multi-language; shared gh-pages)
 
 on:
   push:
     branches:
-      - main
-      - language-*
+      - main          # base English
+      - language-*    # e.g., language-nl -> /nl
   workflow_dispatch:
 
 permissions:
@@ -21,73 +21,147 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout source branch
+      - name: Checkout source
         uses: actions/checkout@v4
 
-      - name: Setup Node & Typst
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 18.x
-      - uses: typst-community/setup-typst@v4
+
+      - name: (Optional) Setup Typst
+        uses: typst-community/setup-typst@v4
 
       - name: Install MyST
         run: npm install -g mystmd
 
-      # 🧮 Determine language and BASE_URL
-      - name: Determine language and BASE_URL
+      # Figure out which language this branch maps to
+      - name: Compute language + BASE_URL
         id: compute
+        shell: bash
         run: |
           if [ "${GITHUB_REF_NAME}" = "main" ]; then
             LANG_CODE="en"
           elif [[ "${GITHUB_REF_NAME}" == language-* ]]; then
             LANG_CODE="${GITHUB_REF_NAME#language-}"
           else
-            echo "❌ Branch '${GITHUB_REF_NAME}' is not configured for deployment. Skipping."
+            echo "Branch not configured for deployment: ${GITHUB_REF_NAME}"
+            echo "skip=true" >> $GITHUB_OUTPUT
             exit 0
           fi
 
-          echo "Detected branch: ${GITHUB_REF_NAME}"
-          echo "Language: ${LANG_CODE}"
-          echo "BASE_URL=/${{ github.event.repository.name }}/${LANG_CODE}" >> $GITHUB_ENV
+          echo "LANG_CODE=${LANG_CODE}"
           echo "lang_code=${LANG_CODE}" >> $GITHUB_OUTPUT
+          echo "BASE_URL=/${{ github.event.repository.name }}/${LANG_CODE}" >> $GITHUB_ENV
           echo "deployed_url=https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/${LANG_CODE}/" >> $GITHUB_OUTPUT
 
-      # 🧱 Build site
+          echo "📘 Detected branch: ${GITHUB_REF_NAME}"
+          echo "🌐 Language code: ${LANG_CODE}"
+          echo "🔗 Will deploy to: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/${LANG_CODE}/"
+
+      - name: Stop if skipped
+        if: steps.compute.outputs.skip == 'true'
+        run: echo "Skipping deployment for this branch."
+
+      # Build the site for the current language (ensures identical path tree per language)
       - name: Build HTML
+        if: steps.compute.outputs.skip != 'true'
         env:
           BASE_URL: ${{ env.BASE_URL }}
         run: myst build --html
 
-      # 🚀 Deploy to shared gh-pages branch under /<lang>/
-      - name: Deploy to gh-pages/<lang>/
+      # Stash build output before switching branches
+      - name: Stash build output
+        if: steps.compute.outputs.skip != 'true'
         run: |
-          LANG_CODE="${{ steps.compute.outputs.lang_code }}"
-          echo "🌍 Deploying language '${LANG_CODE}' to gh-pages/${LANG_CODE}/"
+          rm -rf .deploy_cache
+          mkdir -p .deploy_cache
+          cp -r _build/html/* .deploy_cache/
 
-          git config user.name "github-actions[bot]"
+      # Deploy into gh-pages/<lang> and create root redirect + 404
+      - name: Deploy to gh-pages
+        if: steps.compute.outputs.skip != 'true'
+        shell: bash
+        run: |
+          set -e
+
+          LANG_CODE="${{ steps.compute.outputs.lang_code }}"
+
+          git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          # Fetch or create gh-pages branch
-          git fetch origin gh-pages || true
-          git checkout gh-pages 2>/dev/null || git checkout --orphan gh-pages
+          # Check if gh-pages exists remotely
+          if git ls-remote --exit-code origin gh-pages >/dev/null 2>&1; then
+            git fetch origin gh-pages
+            git checkout gh-pages
+          else
+            echo "Creating orphan gh-pages branch"
+            git checkout --orphan gh-pages
+            # Ensure an initial commit can be made
+            rm -rf *
+          fi
 
-          # Create or replace the target language folder
           mkdir -p "${LANG_CODE}"
           rm -rf "${LANG_CODE:?}/"*
-          cp -r _build/html/* "${LANG_CODE}/"
+          cp -r .deploy_cache/* "${LANG_CODE}/"
 
+          # Ensure Pages doesn't Jekyll-process the folder structure
           touch .nojekyll
 
-          git add .
-          git commit -m "Deploy ${GITHUB_REF_NAME} → ${LANG_CODE}/" || echo "No changes to commit"
+          # Root index.html -> redirect to /en/ (first page)
+          cat > index.html <<'HTML'
+          <!doctype html>
+          <meta charset="utf-8">
+          <title>Redirecting…</title>
+          <meta http-equiv="refresh" content="0; url=./en/">
+          <link rel="canonical" href="./en/">
+          <script>
+            // Hard redirect to /en/ (first load)
+            location.replace("./en/");
+          </script>
+          HTML
+
+          # 404.html -> try to repair missing language by injecting /en/
+          # Also handles direct deep-links w/o language prefix.
+          cat > 404.html <<'HTML'
+          <!doctype html>
+          <meta charset="utf-8">
+          <title>Not Found — Redirecting…</title>
+          <p>Redirecting you to the English version…</p>
+          <script>
+            (function() {
+              var p = location.pathname;
+              // Expect structure: /<repo>/<lang>/...
+              var parts = p.split("/").filter(Boolean); // drops leading/trailing ''
+              // If we already have a language code in position 1, keep it; else inject 'en'
+              // parts[0] = repo name
+              var repo = parts[0] || "";
+              var lang = parts[1];
+              // naive test: two-letter or 'en' length 2–5 is "languagey"
+              var looksLikeLang = lang && lang.length <= 5;
+
+              if (!looksLikeLang) {
+                var rest = parts.slice(1).join("/");
+                var target = "/" + repo + "/en/" + rest;
+                location.replace(target.replace(/\/+$/,"/"));
+              } else {
+                // already have a lang, just go home for that lang
+                location.replace("/" + repo + "/" + lang + "/");
+              }
+            })();
+          </script>
+          HTML
+
+          git add -A
+          git commit -m "Deploy ${GITHUB_REF_NAME} -> /${LANG_CODE}/ (MyST multi-language)" || echo "No changes to commit"
           git push origin gh-pages
 
-      # 🗺️ Summary
-      - name: Deployment Summary
+      - name: Summary
+        if: steps.compute.outputs.skip != 'true'
         run: |
           echo ""
-          echo "✅ Successfully deployed language '${{ steps.compute.outputs.lang_code }}'"
-          echo "🌐 URL: ${{ steps.compute.outputs.deployed_url }}"
+          echo "✅ Deployed ${GITHUB_REF_NAME} as /${{ steps.compute.outputs.lang_code }}/"
+          echo "🔗 ${{ steps.compute.outputs.deployed_url }}"
           echo ""
-          echo "Languages currently published on gh-pages:"
-          git ls-tree --name-only HEAD
+          echo "Published language folders currently in gh-pages:"
+          git ls-tree --name-only HEAD | sed 's/^/ - /'
