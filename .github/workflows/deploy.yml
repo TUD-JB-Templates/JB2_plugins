@@ -166,41 +166,42 @@ jobs:
           cd site
           case "${BEHAVIOR_PRIMARY}" in
             redirect)
-              cat > index.html <<'HTML'
-              <!DOCTYPE html>
-              <html lang="en">
-              <head>
-                <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                <title>Redirecting…</title>
-                <base href="/JB2_plugins/en/">
-                <meta http-equiv="refresh" content="0; url=/JB2_plugins/en/">
-                <style>
-                  html, body {
-                    margin: 0;
-                    padding: 0;
-                    overflow: hidden;
-                    height: 100%;
-                    background: #fff;
-                  }
-                  body::before {
-                    content: "Redirecting to English version…";
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    height: 100%;
-                    font-family: sans-serif;
-                    color: #666;
-                  }
-                </style>
-              </head>
-              <body>
-                <script>
-                  window.location.replace("/JB2_plugins/en/");
-                </script>
-              </body>
-              </html>
-              HTML
+              # Redirect root → /en/ (full HTML, no layout issues)
+              cat > index.html <<-'EOF'
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                  <meta charset="UTF-8">
+                  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                  <title>Redirecting…</title>
+                  <base href="/JB2_plugins/en/">
+                  <meta http-equiv="refresh" content="0; url=/JB2_plugins/en/">
+                  <style>
+                    html, body {
+                      margin: 0;
+                      padding: 0;
+                      overflow: hidden;
+                      height: 100%;
+                      background: #fff;
+                    }
+                    body::before {
+                      content: "Redirecting to English version…";
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      height: 100%;
+                      font-family: sans-serif;
+                      color: #666;
+                    }
+                  </style>
+                </head>
+                <body>
+                  <script>
+                    window.location.replace("/JB2_plugins/en/");
+                  </script>
+                </body>
+                </html>
+              EOF
               echo "Root will redirect to /en/"
               ;;
             copy)
@@ -214,10 +215,7 @@ jobs:
               ;;
             *)
               echo "Unknown BEHAVIOR_PRIMARY='${BEHAVIOR_PRIMARY}', defaulting to redirect."
-              cat > index.html <<'HTML'
-              <!DOCTYPE html>
-              <meta http-equiv="refresh" content="0; url=/JB2_plugins/en/">
-              HTML
+              echo '<meta http-equiv="refresh" content="0; url=en/">' > index.html
               ;;
           esac
           cd ..
