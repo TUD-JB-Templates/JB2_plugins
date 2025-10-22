@@ -77,11 +77,5 @@ site:
   options:
     style: ./style/custom.css
   actions:
-    - title: Languages
-      children:
-      - title: Dutch
-        url: https://tud-jb-templates.github.io/JB2_plugins/nl/
-      - title: English
-        url: https://tud-jb-templates.github.io/JB2_plugins/en/
-  #   favicon: favicon.ico
-  #   logo: site_logo.png
+    - title: English
+      url: https://tud-jb-templates.github.io/JB2_plugins/en/
