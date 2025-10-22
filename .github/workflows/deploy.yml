@@ -27,24 +27,27 @@ jobs:
     outputs:
       branches: ${{ steps.list.outputs.branches }}
     steps:
-      - name: Checkout (full history, all refs)
+      - name: Checkout (full history)
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: List remote branches (excluding gh-pages & HEAD)
+      - name: List remote branches (main + language-*)
         id: list
         shell: bash
         run: |
           git fetch --all --prune
+
+          # Only include main and branches that start with language-
           branches=$(git for-each-ref refs/remotes/origin --format='%(refname:short)' \
-                    | sed 's|^origin/||' \
-                    | grep -v '^gh-pages$' \
-                    | grep -v '^HEAD$' \
-                    | sort -u)
+            | sed 's|^origin/||' \
+            | grep -E '^(main|language-)' \
+            | sort -u)
+
           echo "Found branches:"
           echo "$branches" | sed 's/^/ - /'
-          # Convert to JSON array
+
+          # Convert to proper JSON array
           json=$(printf '%s\n' "$branches" | jq -Rn '[inputs]')
           echo "branches=$json" >> "$GITHUB_OUTPUT"
 
