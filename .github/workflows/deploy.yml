@@ -100,6 +100,14 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
+      - name: Install plugin dependencies
+        run: |
+          echo "📦 Installing additional plugin dependencies..."
+          npm install -g mystmd \
+            qrcode-generator \
+            js-yaml \
+            csv-parse
+
       - name: Install MyST Markdown CLI
         run: npm install -g mystmd
 
