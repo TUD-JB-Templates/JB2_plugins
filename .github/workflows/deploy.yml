@@ -1,4 +1,4 @@
-name: Build and Deploy MyST (multi-language)
+name: Build and Deploy MyST (multi-language, shared gh-pages)
 
 on:
   push:
@@ -12,7 +12,6 @@ permissions:
   pages: write
   id-token: write
 
-# Prevent overlap but keep independent deployments per branch
 concurrency:
   group: pages-${{ github.ref_name }}
   cancel-in-progress: false
@@ -21,55 +20,74 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
-    # Use dynamic environment per branch for clarity
-    environment:
-      name: github-pages-${{ github.ref_name }}
-      url: ${{ steps.compute-url.outputs.deployed_url }}
-
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/configure-pages@v3
-      - uses: actions/setup-node@v4
+      - name: Checkout source branch
+        uses: actions/checkout@v4
+
+      - name: Setup Node & Typst
+        uses: actions/setup-node@v4
         with:
           node-version: 18.x
       - uses: typst-community/setup-typst@v4
+
       - name: Install MyST
         run: npm install -g mystmd
 
-      # 🧮 Determine language folder and BASE_URL
-      - name: Compute BASE_URL and deployment URL
-        id: compute-url
+      # 🧮 Determine language and BASE_URL
+      - name: Determine language and BASE_URL
+        id: compute
         run: |
           if [ "${GITHUB_REF_NAME}" = "main" ]; then
-            LANG_PATH="en"
+            LANG_CODE="en"
           elif [[ "${GITHUB_REF_NAME}" == language-* ]]; then
-            LANG_PATH="${GITHUB_REF_NAME#language-}"
+            LANG_CODE="${GITHUB_REF_NAME#language-}"
           else
-            echo "This branch is not configured for deployment."
+            echo "❌ Branch '${GITHUB_REF_NAME}' is not configured for deployment. Skipping."
             exit 0
           fi
 
-          echo "lang_path=${LANG_PATH}" >> $GITHUB_OUTPUT
-          echo "BASE_URL=/${{ github.event.repository.name }}/${LANG_PATH}" >> $GITHUB_ENV
-          echo "deployed_url=https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/${LANG_PATH}/" >> $GITHUB_OUTPUT
+          echo "Detected branch: ${GITHUB_REF_NAME}"
+          echo "Language: ${LANG_CODE}"
+          echo "BASE_URL=/${{ github.event.repository.name }}/${LANG_CODE}" >> $GITHUB_ENV
+          echo "lang_code=${LANG_CODE}" >> $GITHUB_OUTPUT
+          echo "deployed_url=https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/${LANG_CODE}/" >> $GITHUB_OUTPUT
 
-      # 🧱 Build HTML
-      - name: Build HTML Assets
+      # 🧱 Build site
+      - name: Build HTML
         env:
           BASE_URL: ${{ env.BASE_URL }}
         run: myst build --html
 
-      # 📦 Upload the built HTML
-      - name: Upload Artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: './_build/html'
+      # 🚀 Deploy to shared gh-pages branch under /<lang>/
+      - name: Deploy to gh-pages/<lang>/
+        run: |
+          LANG_CODE="${{ steps.compute.outputs.lang_code }}"
+          echo "🌍 Deploying language '${LANG_CODE}' to gh-pages/${LANG_CODE}/"
 
-      # 🚀 Deploy to GitHub Pages
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      # 🗺️ Show final URL
-      - name: Show deployment URL
-        run: echo "✅ Deployed to ${{ steps.compute-url.outputs.deployed_url }}"
+          # Fetch or create gh-pages branch
+          git fetch origin gh-pages || true
+          git checkout gh-pages 2>/dev/null || git checkout --orphan gh-pages
+
+          # Create or replace the target language folder
+          mkdir -p "${LANG_CODE}"
+          rm -rf "${LANG_CODE:?}/"*
+          cp -r _build/html/* "${LANG_CODE}/"
+
+          touch .nojekyll
+
+          git add .
+          git commit -m "Deploy ${GITHUB_REF_NAME} → ${LANG_CODE}/" || echo "No changes to commit"
+          git push origin gh-pages
+
+      # 🗺️ Summary
+      - name: Deployment Summary
+        run: |
+          echo ""
+          echo "✅ Successfully deployed language '${{ steps.compute.outputs.lang_code }}'"
+          echo "🌐 URL: ${{ steps.compute.outputs.deployed_url }}"
+          echo ""
+          echo "Languages currently published on gh-pages:"
+          git ls-tree --name-only HEAD
