@@ -1,4 +1,4 @@
-name: Build and Deploy MyST (multi-language)
+name: Build & Deploy MyST (multi-language fixed detection)
 
 on:
   push:
@@ -12,7 +12,6 @@ permissions:
   pages: write
   id-token: write
 
-# Prevent overlap but keep independent deployments per branch
 concurrency:
   group: pages-${{ github.ref_name }}
   cancel-in-progress: false
@@ -21,55 +20,50 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
-    # Use dynamic environment per branch for clarity
-    environment:
-      name: github-pages-${{ github.ref_name }}
-      url: ${{ steps.compute-url.outputs.deployed_url }}
-
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/configure-pages@v3
-      - uses: actions/setup-node@v4
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: 18.x
-      - uses: typst-community/setup-typst@v4
+
+      - name: Setup Typst
+        uses: typst-community/setup-typst@v4
+
       - name: Install MyST
         run: npm install -g mystmd
 
-      # 🧮 Determine language folder and BASE_URL
-      - name: Compute BASE_URL and deployment URL
-        id: compute-url
+      # --- detect language robustly ---
+      - name: Detect language branch
+        id: compute
+        shell: bash
         run: |
-          if [ "${GITHUB_REF_NAME}" = "main" ]; then
-            LANG_PATH="en"
-          elif [[ "${GITHUB_REF_NAME}" == language-* ]]; then
-            LANG_PATH="${GITHUB_REF_NAME#language-}"
+          echo "🔍 Raw GitHub vars:"
+          echo "GITHUB_REF: ${GITHUB_REF}"
+          echo "GITHUB_REF_NAME: ${GITHUB_REF_NAME}"
+          echo "GITHUB_HEAD_REF: ${GITHUB_HEAD_REF}"
+
+          BRANCH="${GITHUB_REF_NAME:-${GITHUB_HEAD_REF}}"
+          if [ -z "$BRANCH" ]; then
+            BRANCH="$(echo "${GITHUB_REF}" | sed 's|refs/heads/||')"
+          fi
+
+          echo "📘 Detected raw branch name: $BRANCH"
+
+          if [ "$BRANCH" = "main" ]; then
+            LANG_CODE="en"
+          elif [[ "$BRANCH" =~ ^language[-_/](.+)$ ]]; then
+            LANG_CODE="${BASH_REMATCH[1]}"
           else
-            echo "This branch is not configured for deployment."
+            echo "❌ Branch '$BRANCH' not configured for deployment."
+            echo "skip=true" >> $GITHUB_OUTPUT
             exit 0
           fi
 
-          echo "lang_path=${LANG_PATH}" >> $GITHUB_OUTPUT
-          echo "BASE_URL=/${{ github.event.repository.name }}/${LANG_PATH}" >> $GITHUB_ENV
-          echo "deployed_url=https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/${LANG_PATH}/" >> $GITHUB_OUTPUT
-
-      # 🧱 Build HTML
-      - name: Build HTML Assets
-        env:
-          BASE_URL: ${{ env.BASE_URL }}
-        run: myst build --html
-
-      # 📦 Upload the built HTML
-      - name: Upload Artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: './_build/html'
-
-      # 🚀 Deploy to GitHub Pages
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
-
-      # 🗺️ Show final URL
-      - name: Show deployment URL
-        run: echo "✅ Deployed to ${{ steps.compute-url.outputs.deployed_url }}"
+          echo "✅ Detected language code: ${LANG_CODE}"
+          echo "lang_code=${LANG_CODE}" >> $GITHUB_OUTPUT
+          echo "BASE_URL=/${{ github.event.repository.name }}/${LANG_CODE}" >> $GITHUB_ENV
+          echo "deployed_url=https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/${LANG_CODE}/" >> $GITHUB_OUTPUT
+          echo "skip=false" >> $GITHUB_OUTPUT
