@@ -47,8 +47,10 @@ jobs:
           echo "Found branches:"
           echo "$branches" | sed 's/^/ - /'
 
-          # Convert to proper JSON array
-          json=$(printf '%s\n' "$branches" | jq -Rn '[inputs]')
+          # Convert to compact JSON array
+          json=$(printf '%s\n' "$branches" | jq -R . | jq -s -c .)
+
+          echo "JSON: $json"
           echo "branches=$json" >> "$GITHUB_OUTPUT"
 
   # 2) Build every branch in a matrix
