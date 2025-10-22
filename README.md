@@ -1,6 +1,6 @@
 # JB2_plugins
 
-Plugins for JB2
+Plugins beschikbaar voor JB 2
 
 
 ## Test procedure
