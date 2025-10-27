@@ -1,6 +1,6 @@
 # Deploy Multi-Language MyST Books
 
-A GitHub action can be used to automate building and deploying multiple book versions (e.g. English and Dutch) to GitHub Pages. It's designed for repositories where each language has its own content folder, for example `content/en/` and `content/nl/`. 
+A GitHub action can be used to automate building and deploying multiple book translations (e.g. English and Dutch) to GitHub Pages. It's designed for repositories where each language has its own content folder, for example `content/en/` and `content/nl/`. 
 
 When you push to the main branch, this workflow: 
 
@@ -23,19 +23,31 @@ content/
   ├── nl
   │   ├── index.md
   │   └── ...
+  ├── figures
   ├── toc_en.yml
   ├── toc_nl.yml
   └── myst.yml
 
 ```
 
-Each language version should have its own table of contents file (`toc_en.yml`, `toc_nl.yml`) located in the root of the project. The GitHub action will replace the toc file for each language during the build process. 
+Each language version should have its own table of contents file (`toc_en.yml`, `toc_nl.yml`) located in the root of the project. The GitHub action will replace the toc file for each language during the build process.
+
+:::{tip}
+If you place the `figures` folder at the same level as the language folders (rather than inside them), you can keep figure references consistent across all languages. This way, each translated book can use the same image paths without duplication.
+:::
 
 ## Usage
 
 1) create the workflow file `.github/workflows/deploy-multilang.yml`.
 2) Copy the GitHub Action YAMl (TODO: Link).
-3) add a frontpage to your book, containing [buttons](https://mystmd.org/guide/dropdowns-cards-and-tabs#buttons) referencing the different languages.
+3) Create a front page (for example content/index.md) that lets readers pick their preferred language.
+Each button should link to the root page of that language’s build, which follows the pattern `https://{username}.github.io/{repository}/{language}`:
+
+
+```markdown
+{button}`Dutch <https://{username}.github.io/{repository}/nl>`
+{button}`English <https://{username}.github.io/{repository}/en>`
+```
 
 An example has been implemented [here](https://natuurkunde.github.io/Broekzakdemos/)
 
