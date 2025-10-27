@@ -71,6 +71,10 @@ project:
   - title: gh-releases
     children:
       - file: contents/gh-release.md
+  
+  - title: GitHub actions
+    children:
+      - file: contents/multilanguage.md
 
 site:
   template: book-theme
