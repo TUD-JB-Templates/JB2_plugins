@@ -42,10 +42,11 @@ jobs:
       - name: Build HTML Assets
         run: myst build --html
       # we want to check for .js files in static folder, and add <script> {content of files} </script> to the end of each head in each html file
-      - name: insert static files
+      - name: Insert static files
         run: |
           set -e
 
+          HTML_DIR="_build/html"
           echo "🔍 Searching for JS files in ./static"
           js_files=$(find static -type f -name "*.js" | sort)
           if [ -z "$js_files" ]; then
@@ -57,12 +58,12 @@ jobs:
           script_tags=""
           for js_file in $js_files; do
             # Compute relative path from HTML dir to JS file
-            rel_path=$(realpath --relative-to="${{ inputs.html_dir }}" "$js_file")
+            rel_path=$(realpath --relative-to="$HTML_DIR" "$js_file")
             script_tags="${script_tags}\n<script src=\"${rel_path}\"></script>"
           done
 
-          echo "💡 Injecting scripts into HTML files in '${{ inputs.html_dir }}'"
-          find "${{ inputs.html_dir }}" -type f -name "*.html" | while read -r file; do
+          echo "💡 Injecting scripts into HTML files in '${HTML_DIR}'"
+          find "$HTML_DIR" -type f -name "*.html" | while read -r file; do
             sed -i "s|</body>|${script_tags}\n</body>|g" "$file"
           done
 
