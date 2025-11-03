@@ -63,21 +63,21 @@ jobs:
             exit 0
           fi
 
-          echo "Found $js_count JS file(s):"
-
+          echo "Found $js_count JS file(s)."
           echo "Copying JS files to $STATIC_DEST ..."
           mkdir -p "$STATIC_DEST"
           for js_file in $js_files; do
             cp --parents "$js_file" "$HTML_DIR"/
+            echo "📁 Copied: $js_file → $HTML_DIR/$js_file"
           done
-          echo "Copy complete."
+          echo "✅ Copy complete."
 
-
-          echo "Building script tag block..."
+          echo ""
+          echo "Building absolute script tag block..."
           script_tags=""
           for js_file in $js_files; do
-            rel_path=$(realpath --relative-to="$HTML_DIR" "$HTML_DIR/$js_file")
-            script_tags="${script_tags}\n<script src=\"${rel_path}\"></script>"
+            filename=$(basename "$js_file")
+            script_tags="${script_tags}\n<script src=\"${BASE_URL}/static/${filename}\"></script>"
           done
 
           echo ""
@@ -100,8 +100,8 @@ jobs:
           done
 
           echo ""
-          echo "Injection complete."
-          echo "Summary:"
+          echo "✅ Injection complete."
+          echo "📊 Summary:"
           echo "  - JS files processed: $js_count"
           echo "  - HTML files updated: $html_count"
           echo "-------------------------------------------------------------"
