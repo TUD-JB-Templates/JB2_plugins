@@ -45,8 +45,9 @@ jobs:
       - name: insert static files
         run: |
           for f in ./static/*.js; do
+            js_content=$(sed 's/[&/\]/\\&/g' "$f" | tr '\n' ' ')
             for html in ./_build/html/**/*.html; do
-              sed -i "/<\/head>/i <script>$(cat $f)</script>" $html
+              sed -i "/<\/head>/i <script>${js_content}</script>" "$html"
             done
           done
 
