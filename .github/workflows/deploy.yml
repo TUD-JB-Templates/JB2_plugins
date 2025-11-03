@@ -41,9 +41,9 @@ jobs:
         run: npm install qrcode
       - name: Build HTML Assets
         run: myst build --html
+      # we want to check for .js files in static folder, and add <script> {content of files} </script> to the end of each head in each html file
       - name: insert static files
         run: |
-          # we want to check for .js files in static folder, and add <script> {content of files} </script> to the end of each head in each html file
           for f in ./static/*.js; do
             for html in ./_build/html/**/*.html; do
               sed -i "/<\/head>/i <script>$(cat $f)</script>" $html

@@ -6,9 +6,9 @@ name: deploy-book
 on:
 
 # add triggers as needed
-  push:
-    branches:
-      - '**'  # all branches
+  # push:
+  #   branches:
+  #     - '**'  # all branches
   workflow_dispatch:
   workflow_call:
 
