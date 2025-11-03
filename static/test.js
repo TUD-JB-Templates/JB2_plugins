@@ -2,6 +2,7 @@
   function insertGiscus() {
     // avoid duplicates
     if (document.getElementById("giscus_container")) return;
+    
 
     const container = document.createElement("div");
     container.id = "giscus_container";
@@ -31,15 +32,9 @@
     console.log("💬 Giscus injected.");
   }
 
-  // Run once at first load
-  document.addEventListener("DOMContentLoaded", insertGiscus);
+  // Run once at first load with 2 second delay to ensure DOM is ready
+  document.addEventListener("DOMContentLoaded", () => {
+    setTimeout(insertGiscus, 2000);
+  });
 
-  // MyST Book uses PJAX-style navigation events
-  document.addEventListener("pjax:complete", insertGiscus);
-  document.addEventListener("sphinx-content-loaded", insertGiscus);
-
-  // As a last resort, recheck periodically for deletions
-//   setInterval(() => {
-//     if (!document.getElementById("giscus_container")) insertGiscus();
-//   }, 3000);
 })();
