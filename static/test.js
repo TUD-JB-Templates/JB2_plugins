@@ -8,7 +8,7 @@
     container.id = "giscus_container";
 
     // Make container occupy middle 50% of the width
-    container.style.maxWidth = "50%";
+    container.style.maxWidth = "75%";
     container.style.margin = "0 auto";
 
     // place it inside main.content or fallback to body
