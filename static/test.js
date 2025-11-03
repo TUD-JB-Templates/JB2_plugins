@@ -20,4 +20,5 @@ document.addEventListener("DOMContentLoaded", function() {
   script.crossOrigin = "anonymous";
   script.async = true;
   document.head.appendChild(script);
+  console.log("Giscus script added to the document.");
 })();
