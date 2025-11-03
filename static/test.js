@@ -13,8 +13,10 @@
 
     // place it inside main.content or fallback to body set target by classnames: article-grid subgrid-gap col-screen article content
     let target = document.getElementsByClassName("article-grid subgrid-gap col-screen article content")[0];
-    
-    target.appendChild(container);
+
+    // target.appendChild(container);
+    // Append container to target as second last element
+    target.insertBefore(container, target.lastElementChild);
 
     const script = document.createElement("script");
     script.src = "https://giscus.app/client.js";
