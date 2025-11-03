@@ -114,7 +114,9 @@ jobs:
 
           echo "💬 Inserting Giscus comment widget into HTML files (before </head>)..."
 
-          giscus_script='<script src="https://giscus.app/client.js"
+          # Define the Giscus script block (multiline)
+          read -r -d '' giscus_script <<'EOF'
+          <script src="https://giscus.app/client.js"
               data-repo="TUD-JB-Templates/JB2_plugins"
               data-repo-id="R_kgDOPrPv2Q"
               data-category="Page comments"
@@ -128,7 +130,8 @@ jobs:
               data-lang="en"
               crossorigin="anonymous"
               async>
-          </script>'
+          </script>
+          EOF
 
           html_files=$(find "$HTML_DIR" -type f -name "*.html" | sort)
           html_count=$(echo "$html_files" | grep -c '.html' || true)
@@ -145,11 +148,13 @@ jobs:
           echo "🛠️ Inserting Giscus script before </head> in each HTML file..."
           echo "-------------------------------------------------------------"
 
+          # Escape backslashes, ampersands, and newlines for sed
+          esc_script=$(printf '%s\n' "$giscus_script" | sed -e 's/[\/&]/\\&/g' -e ':a' -e 'N' -e '$!ba' -e 's/\n/\\n/g')
+
           for file in $html_files; do
             echo "💬 Updating: $file"
-            # Insert only if the script isn't already present
             if ! grep -q "https://giscus.app/client.js" "$file"; then
-              sed -i "s|</head>|${giscus_script}\n</head>|g" "$file"
+              sed -i "s|</head>|${esc_script}\n</head>|g" "$file"
             else
               echo "⚠️ Giscus script already present in $file — skipping"
             fi
