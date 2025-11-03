@@ -7,16 +7,10 @@
     const container = document.createElement("div");
     container.id = "giscus_container";
 
-    // Make container occupy middle 50% of the width
-    container.style.maxWidth = "75%";
-    container.style.margin = "0 auto";
-
     // place it inside main.content or fallback to body set target by classnames: article-grid subgrid-gap col-screen article content
     let target = document.getElementsByClassName("article-grid subgrid-gap col-screen article content")[0];
-
-    // target.appendChild(container);
-    // Append container to target as second last element
-    target.insertBefore(container, target.lastElementChild);
+    
+    target.appendChild(container);
 
     const script = document.createElement("script");
     script.src = "https://giscus.app/client.js";
