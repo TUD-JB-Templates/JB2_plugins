@@ -1,15 +1,15 @@
-// log hello world once document is loaded
-document.addEventListener("DOMContentLoaded", function() {
-  console.log("Hello, World!");
-
+(function () {
   function insertGiscus() {
-    // if giscus already exists, do nothing
+    // avoid duplicates
     if (document.getElementById("giscus_container")) return;
 
-    console.log("🔁 Adding Giscus...");
     const container = document.createElement("div");
     container.id = "giscus_container";
-    document.body.appendChild(container);
+    container.style.marginTop = "2rem";
+
+    // place it inside main.content or fallback to body
+    const target = document.querySelector("main.content") || document.body;
+    target.appendChild(container);
 
     const script = document.createElement("script");
     script.src = "https://giscus.app/client.js";
@@ -27,25 +27,19 @@ document.addEventListener("DOMContentLoaded", function() {
     script.crossOrigin = "anonymous";
     script.async = true;
 
-    // Append the script *inside* the container
     container.appendChild(script);
+    console.log("💬 Giscus injected.");
   }
 
-  // initial load
-  insertGiscus();
+  // Run once at first load
+  document.addEventListener("DOMContentLoaded", insertGiscus);
 
-  // watch for DOM changes and reinsert if needed
-  const observer = new MutationObserver((mutations) => {
-    const giscusExists = document.getElementById("giscus_container");
-    if (!giscusExists) {
-      insertGiscus();
-    }
-  });
+  // MyST Book uses PJAX-style navigation events
+  document.addEventListener("pjax:complete", insertGiscus);
+  document.addEventListener("sphinx-content-loaded", insertGiscus);
 
-  observer.observe(document.body, {
-    childList: true,
-    subtree: true,
-  });
-
-  console.log("👀 Giscus watcher active");
-});
+  // As a last resort, recheck periodically for deletions
+//   setInterval(() => {
+//     if (!document.getElementById("giscus_container")) insertGiscus();
+//   }, 3000);
+})();
