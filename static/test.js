@@ -11,8 +11,9 @@
     container.style.maxWidth = "75%";
     container.style.margin = "0 auto";
 
-    // place it inside main.content or fallback to body
-    const target = document.querySelector("main.content") || document.body;
+    // place it inside main.content or fallback to body set target by classnames: article-grid subgrid-gap col-screen article content
+    let target = document.getElementsByClassName("article-grid subgrid-gap col-screen article content")[0];
+    
     target.appendChild(container);
 
     const script = document.createElement("script");
