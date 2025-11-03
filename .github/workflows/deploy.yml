@@ -44,12 +44,29 @@ jobs:
       # we want to check for .js files in static folder, and add <script> {content of files} </script> to the end of each head in each html file
       - name: insert static files
         run: |
-          for f in ./static/*.js; do
-            js_content=$(sed 's/[&/\]/\\&/g' "$f" | tr '\n' ' ')
-            for html in ./_build/html/**/*.html; do
-              sed -i "/<\/head>/i <script>${js_content}</script>" "$html"
-            done
+          set -e
+
+          echo "🔍 Searching for JS files in ./static"
+          js_files=$(find static -type f -name "*.js" | sort)
+          if [ -z "$js_files" ]; then
+            echo "⚠️ No JS files found in ./static"
+            exit 0
+          fi
+
+          # Build script tags block
+          script_tags=""
+          for js_file in $js_files; do
+            # Compute relative path from HTML dir to JS file
+            rel_path=$(realpath --relative-to="${{ inputs.html_dir }}" "$js_file")
+            script_tags="${script_tags}\n<script src=\"${rel_path}\"></script>"
           done
+
+          echo "💡 Injecting scripts into HTML files in '${{ inputs.html_dir }}'"
+          find "${{ inputs.html_dir }}" -type f -name "*.html" | while read -r file; do
+            sed -i "s|</body>|${script_tags}\n</body>|g" "$file"
+          done
+
+          echo "✅ Injection complete."
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
