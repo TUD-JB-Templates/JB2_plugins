@@ -6,7 +6,10 @@
 
     const container = document.createElement("div");
     container.id = "giscus_container";
-    container.style.marginTop = "2rem";
+
+    // Make container occupy middle 50% of the width
+    container.style.maxWidth = "50%";
+    container.style.margin = "0 auto";
 
     // place it inside main.content or fallback to body
     const target = document.querySelector("main.content") || document.body;
