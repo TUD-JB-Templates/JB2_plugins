@@ -47,18 +47,29 @@ jobs:
           set -e
 
           HTML_DIR="_build/html"
+          STATIC_SRC="static"
+          STATIC_DEST="$HTML_DIR/static"
 
-          echo "🔍 Searching for JS files in ./static..."
-          js_files=$(find static -type f -name "*.js" | sort)
+          echo "🔍 Searching for JS files in $STATIC_SRC..."
+          js_files=$(find "$STATIC_SRC" -type f -name "*.js" | sort)
           js_count=$(echo "$js_files" | grep -c '.js' || true)
 
           if [ "$js_count" -eq 0 ]; then
-            echo "⚠️ No JS files found in ./static"
+            echo "⚠️ No JS files found in $STATIC_SRC"
             exit 0
           fi
 
           echo "✅ Found $js_count JS file(s):"
           echo "$js_files" | sed 's/^/   - /'
+
+          echo ""
+          echo "📦 Copying JS files to $STATIC_DEST ..."
+          mkdir -p "$STATIC_DEST"
+          for js_file in $js_files; do
+            cp --parents "$js_file" "$HTML_DIR"/
+            echo "📁 Copied: $js_file → $STATIC_DEST"
+          done
+          echo "✅ Copy complete."
 
           echo ""
           echo "📜 Contents of static JS files (first 20 lines each):"
@@ -73,7 +84,7 @@ jobs:
           echo "💡 Building script tag block..."
           script_tags=""
           for js_file in $js_files; do
-            rel_path=$(realpath --relative-to="$HTML_DIR" "$js_file")
+            rel_path=$(realpath --relative-to="$HTML_DIR" "$HTML_DIR/$js_file")
             script_tags="${script_tags}\n<script src=\"${rel_path}\"></script>"
           done
 
@@ -91,12 +102,12 @@ jobs:
           echo "$html_files" | sed 's/^/   - /'
 
           echo ""
-          echo "🛠️ Inserting <script> tags before </body> in each HTML file..."
+          echo "🛠️ Inserting <script> tags before </head> in each HTML file..."
           echo "-------------------------------------------------------------"
 
           for file in $html_files; do
             echo "🔧 Updating: $file"
-            sed -i "s|</body>|${script_tags}\n</body>|g" "$file"
+            sed -i "s|</head>|${script_tags}\n</head>|g" "$file"
           done
 
           echo ""
