@@ -1,7 +1,16 @@
 // log hello world once document is loaded
 document.addEventListener("DOMContentLoaded", function() {
-    console.log("Hello, World!");
-    (function () {
+  console.log("Hello, World!");
+
+  function insertGiscus() {
+    // if giscus already exists, do nothing
+    if (document.getElementById("giscus_container")) return;
+
+    console.log("🔁 Adding Giscus...");
+    const container = document.createElement("div");
+    container.id = "giscus_container";
+    document.body.appendChild(container);
+
     const script = document.createElement("script");
     script.src = "https://giscus.app/client.js";
     script.setAttribute("data-repo", "TUD-JB-Templates/JB2_plugins");
@@ -17,9 +26,26 @@ document.addEventListener("DOMContentLoaded", function() {
     script.setAttribute("data-lang", "en");
     script.crossOrigin = "anonymous";
     script.async = true;
-    document.head.appendChild(script);
-    console.log("Giscus script added to the document.");
-    })();
+
+    // Append the script *inside* the container
+    container.appendChild(script);
+  }
+
+  // initial load
+  insertGiscus();
+
+  // watch for DOM changes and reinsert if needed
+  const observer = new MutationObserver((mutations) => {
+    const giscusExists = document.getElementById("giscus_container");
+    if (!giscusExists) {
+      insertGiscus();
+    }
+  });
+
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+  });
+
+  console.log("👀 Giscus watcher active");
 });
-
-
