@@ -47,27 +47,65 @@ jobs:
           set -e
 
           HTML_DIR="_build/html"
-          echo "🔍 Searching for JS files in ./static"
+
+          echo "🔍 Searching for JS files in ./static..."
           js_files=$(find static -type f -name "*.js" | sort)
-          if [ -z "$js_files" ]; then
+          js_count=$(echo "$js_files" | grep -c '.js' || true)
+
+          if [ "$js_count" -eq 0 ]; then
             echo "⚠️ No JS files found in ./static"
             exit 0
           fi
 
-          # Build script tags block
+          echo "✅ Found $js_count JS file(s):"
+          echo "$js_files" | sed 's/^/   - /'
+
+          echo ""
+          echo "📜 Contents of static JS files (first 20 lines each):"
+          echo "----------------------------------------------------"
+          for js_file in $js_files; do
+            echo "🧩 File: $js_file"
+            echo "----------------------------------------------------"
+            head -n 20 "$js_file" || true
+            echo ""
+          done
+
+          echo "💡 Building script tag block..."
           script_tags=""
           for js_file in $js_files; do
-            # Compute relative path from HTML dir to JS file
             rel_path=$(realpath --relative-to="$HTML_DIR" "$js_file")
             script_tags="${script_tags}\n<script src=\"${rel_path}\"></script>"
           done
 
-          echo "💡 Injecting scripts into HTML files in '${HTML_DIR}'"
-          find "$HTML_DIR" -type f -name "*.html" | while read -r file; do
+          echo ""
+          echo "🔍 Searching for HTML files under $HTML_DIR..."
+          html_files=$(find "$HTML_DIR" -type f -name "*.html" | sort)
+          html_count=$(echo "$html_files" | grep -c '.html' || true)
+
+          if [ "$html_count" -eq 0 ]; then
+            echo "⚠️ No HTML files found in $HTML_DIR"
+            exit 1
+          fi
+
+          echo "✅ Found $html_count HTML file(s) to update:"
+          echo "$html_files" | sed 's/^/   - /'
+
+          echo ""
+          echo "🛠️ Inserting <script> tags before </body> in each HTML file..."
+          echo "-------------------------------------------------------------"
+
+          for file in $html_files; do
+            echo "🔧 Updating: $file"
             sed -i "s|</body>|${script_tags}\n</body>|g" "$file"
           done
 
+          echo ""
           echo "✅ Injection complete."
+          echo "📊 Summary:"
+          echo "   - JS files processed: $js_count"
+          echo "   - HTML files updated: $html_count"
+          echo "-------------------------------------------------------------"
+
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
