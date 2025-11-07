@@ -82,7 +82,7 @@ project:
   
   - title: Giscus
     children:
-      - file: contents\adding-giscus.md
+      - file: contents/adding-giscus.md
 
 site:
   template: book-theme
