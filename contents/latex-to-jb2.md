@@ -1,6 +1,7 @@
 # Latex to JB 2
 
-from the mystmd documentation:
+[from the mystmd documentation:](https://mystmd.org/guide/writing-in-latex#getting-started)
+
 > To begin rendering LaTeX documents with MyST, first install the MyST CLI. Navigate to your project directory containing LaTeX (*.tex) files and execute the commands myst init followed by myst start. This launches a dynamic web server that renders your LaTeX content in near real-time, with comprehensive error reporting for issues such as unrecognized macros or any other math rendering problems. 
 
 Instead of using myst start, use gh-pages for hosting the site.
