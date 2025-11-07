@@ -76,9 +76,13 @@ project:
     children:
       - file: contents/multilanguage.md
   
-  - title: overleaf
+  - title: Overleaf
     children:
       - file: contents/latex-to-jb2.md
+  
+  - title: Giscus
+    children:
+      - file: contents\adding-giscus.md
 
 site:
   template: book-theme

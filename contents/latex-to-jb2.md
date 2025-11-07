@@ -10,7 +10,7 @@ Instead of using myst start, use gh-pages for hosting the site.
 
 - Link overleaf to github. In overleaf, go to Integrations > GitHub > Create a GitHub repository
 
-![image of overlead ](./images/image.png)
+![image of overlead ](./images/image2.png)
 
 - Open GitHub Desktop and clone the repository to your device. Go to clone repository > your repositories > {name of new repository}
 
