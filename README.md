@@ -46,4 +46,3 @@ site:
   options:
     style: https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/CSS/custom.css
 ```
-

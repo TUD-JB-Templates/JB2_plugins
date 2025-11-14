@@ -23,8 +23,9 @@ project:
     - plugins/aside.mjs
     - plugins/typst_eq.mjs
     - plugins/update-date-frontmatter/update-date-frontmatter.mjs
-    - plugins/read-csv.mjs
+    # - plugins/read-csv.mjs
 
+    - plugins/gallery_generator.mjs
 
     - plugins_new/new_example.mjs
     - plugins_new/new_experiment.mjs
@@ -49,6 +50,7 @@ project:
 
   toc:
   - file: README.md
+  - file: contents/gallery.md
   - title: General book plugins
     children:
       - file: contents/add-date-frontmatter.md

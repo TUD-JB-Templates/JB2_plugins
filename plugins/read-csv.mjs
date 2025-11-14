@@ -36,7 +36,7 @@ const csvNoticeTransform = {
         const filename = pathParts[pathParts.length - 1];
 
         // parse frontmatter manually from the source file. console log statement for debugging
-        console.log(`[CSV] Checking frontmatter in: ${relativePath} for ${filename}`);
+        // console.log(`[CSV] Checking frontmatter in: ${relativePath} for ${filename}`);
         const fm = getFrontmatter(file.path);
         
         if (!fm || !fm.csv_name) return node;
