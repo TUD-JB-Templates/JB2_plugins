@@ -38,7 +38,7 @@ project:
 
   exports:
     - format: typst
-      template: ./pdf_template_book #lapreprint-typst
+      template: plain_typst_book
       output: exports/Test_plugin_typst.pdf
       id: output-pdf1
     
@@ -50,11 +50,12 @@ project:
 
   toc:
   - file: README.md
-  - file: contents/gallery.md
   - title: General book plugins
     children:
       - file: contents/add-date-frontmatter.md
       - file: contents/add-date-csv.md
+      - file: contents/gallery.md
+
   - title: PDF Support
     children:
       - file: contents/pdf_support.md

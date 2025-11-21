@@ -18,6 +18,9 @@ Plugins for JB2
 | iframe  | Turns iframes into QR codes during PDF conversion  | https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/iframe/iframe.mjs  |
 | intermezzo  | adds intermezzo support to PDF conversion  | https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/intermezzo/intermezzo.mjs  |
 | exercise  | adds exercise support to PDF conversion  | https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/exercise/exercise.mjs  |
+| read-csv  | example package, showcasing how to load information from CSV file in a plugin | example only |
+| Gallery-generator  | creates a gallery using information provided in .yml file | example only |
+
 
 | CSS | description | release link |
 | -------- | -------- | -------- |
