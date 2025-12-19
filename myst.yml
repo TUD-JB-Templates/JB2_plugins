@@ -50,6 +50,9 @@ project:
 
   toc:
   - file: README.md
+  - title: editor
+    children:
+      - file: contents/wizard.md
   - title: General book plugins
     children:
       - file: contents/add-date-frontmatter.md
