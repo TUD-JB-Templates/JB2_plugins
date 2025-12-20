@@ -53,6 +53,7 @@ project:
   - title: editor
     children:
       - file: contents/wizard.md
+      - file: contents/test-page.md
   - title: General book plugins
     children:
       - file: contents/add-date-frontmatter.md
