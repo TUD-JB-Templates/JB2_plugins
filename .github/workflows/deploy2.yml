@@ -1,0 +1,101 @@
+name: MyST GitHub Pages Deploy
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  BASE_URL: /${{ github.event.repository.name }}
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: 'pages'
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20 # Wizard likely needs 20+ for Vite/Solid
+
+      # --- NEW: BUILD VITE APP SECTION ---
+      - name: Build Wizard (Vite/Solid App)
+        run: |
+          cd wizard/app
+          npm install
+          npm run build
+          # Ensure the root static folder exists
+          mkdir -p ../../static
+          # Copy the bundle to the static folder used by MyST
+          cp dist/wizard-bundle.js ../../static/
+      # -----------------------------------
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
+
+      - name: Install MyST
+        run: npm install -g mystmd
+
+      - name: install dependencies
+        run: |
+          npm install qrcode
+          npm install js-yaml
+
+      - name: Build HTML Assets
+        run: myst build --html
+
+      - name: Insert static files
+        run: |
+          set -e
+          HTML_DIR="_build/html"
+          STATIC_SRC="static"
+          # ... (rest of your existing shell script remains the same)
+          # It will now find the wizard-bundle.js we just moved into 'static'
+          
+          echo "Searching for JS files in $STATIC_SRC..."
+          js_files=$(find "$STATIC_SRC" -type f -name "*.js" | sort)
+          js_count=$(echo "$js_files" | grep -c '.js' || true)
+
+          if [ "$js_count" -eq 0 ]; then
+            echo "⚠️ No JS files found in $STATIC_SRC"
+            exit 0
+          fi
+
+          echo "Found $js_count JS file(s)."
+          mkdir -p "$HTML_DIR/static"
+          for js_file in $js_files; do
+            # Using cp --parents ensures pathing like static/wizard-bundle.js
+            cp --parents "$js_file" "$HTML_DIR"/
+          done
+
+          script_tags=""
+          for js_file in $js_files; do
+            filename=$(basename "$js_file")
+            script_tags="${script_tags}\n<script src=\"${BASE_URL}/static/${filename}\"></script>"
+          done
+
+          html_files=$(find "$HTML_DIR" -type f -name "*.html" | sort)
+          for file in $html_files; do
+            sed -i "s|</head>|${script_tags}\n</head>|g" "$file"
+          done
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './_build/html'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

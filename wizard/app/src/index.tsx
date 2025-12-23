@@ -8,43 +8,38 @@ import {
   getRepositoryLink,
   getCurrentFileHref,
   parseOwnerRepoFromHref,
-  setCurrentFileHref, // <--- Add this line
 } from "./lib/github/GithubUtility";
 import { github } from "./lib/github/githubInteraction";
 import { saveEditorContentToDatabase } from "./components/Editor";
 
-const root = document.getElementById("root");
+const root = document.getElementById("wizard-root");
 
 if (!(root instanceof HTMLElement)) {
   throw new Error(
     "Root element not found. Did you forget to add it to your index.html? Or maybe the id attribute got misspelled?",
   );
 }
-// 1. Get arguments from your Iframe URL
-const urlParams = new URLSearchParams(window.location.search);
-const pOwner  = urlParams.get('owner');
-const pRepo   = urlParams.get('repo');
-const pFile   = urlParams.get('file'); // e.g., "content/intro.md"
-const pBranch = urlParams.get('branch') || "main";
 
-console.log("[wizard] Params:", {pOwner, pRepo, pFile, pBranch});
+//initialise github info
+const ref = getRepositoryLink();
+getCurrentFileHref();
 
-// 2. Initialize the GitHub state
-if (pOwner && pRepo) {
-    // Set the core repository info
-    github.setOwner(pOwner);
-    github.setRepo(pRepo);
-    github.setBranch(pBranch);
-    
-    // If a specific file is provided, we "fake" the edit link 
-    // so the GithubUtility signals pick it up.
-    if (pFile) {
-        const fakeEditHref = `https://github.com/${pOwner}/${pRepo}/edit/${pBranch}/${pFile}`;
-        setCurrentFileHref(fakeEditHref); 
-        console.log("Forcing editor to file:", pFile);
-    }
+if (ref != null) {
+  const ownerRepo = parseOwnerRepoFromHref(ref);
+  if (ownerRepo != undefined) {
+    github.setRepo(ownerRepo.repo);
+    github.setOwner(ownerRepo.owner);
+  } else {
+    console.warn("Database not initialised - failed to parse href.");
+    github.setRepo("repo");
+    github.setBranch("branch");
+    github.setOwner("owner");
+  }
 } else {
-    console.log("oops");
+  console.warn("Database not initialised - no github repo link found.");
+  github.setRepo("repo");
+  github.setBranch("branch");
+  github.setOwner("owner");
 }
 
 window.addEventListener("beforeunload", async () => {

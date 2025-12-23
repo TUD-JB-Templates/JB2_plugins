@@ -1,28 +1,22 @@
-import { defineConfig } from "vite";
-import solidPlugin from "vite-plugin-solid";
-import { viteSingleFile } from 'vite-plugin-singlefile';
-import postcssPrefixSelector from 'postcss-prefix-selector';
+import { defineConfig } from 'vite';
+import solidPlugin from 'vite-plugin-solid'; // Changed from React to Solid
+import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js';
+import { resolve } from 'path';
 
 export default defineConfig({
-    plugins: [
-        solidPlugin(),
-        // Uncomment the line below if you want a single file for the Sphinx extension
-        viteSingleFile()
-    ],
-    css: {
-        postcss: {
-            plugins: [
-                postcssPrefixSelector({
-                    prefix: '.extension_name_css',
-                }),
-            ]
-        }
+  // Use solidPlugin() here
+  plugins: [solidPlugin(), cssInjectedByJsPlugin()],
+  build: {
+    lib: {
+      // Ensure this points to your index file (usually src/index.tsx or src/main.tsx)
+      entry: resolve(__dirname, 'src/index.tsx'), 
+      name: 'WizardApp',
+      formats: ['iife'], 
+      fileName: () => 'wizard-bundle.js',
     },
-    base: "./",
-    server: {
-        port: 3000,
-    },
-    build: {
-        target: "esnext",
-    },
+    // SolidJS works best when targeting modern browsers
+    target: 'esnext', 
+    outDir: 'dist',
+    emptyOutDir: true,
+  },
 });

@@ -23,9 +23,9 @@ export const [currentFileHref, setCurrentFileHref] = createSignal<
  * @returns The GitHub repository URL if found, otherwise null.
  */
 export function getRepositoryLink(): string | null {
-    // Query for the button/link with class .btn-source-repository-button.
+    // Query for the button/link with title 'Edit This Page'.
     const anchor = document.querySelector<HTMLAnchorElement>(
-        "a.btn-source-repository-button",
+        'a[title*="GitHub Repository:"]'
     );
 
     // Return the anchor.href or null.
@@ -65,7 +65,7 @@ export function parseOwnerRepoFromHref(
 export function getCurrentFileHref(): string | null {
     // Query for the edit button/link with class .btn-source-edit-button.
     const anchor = document.querySelector<HTMLAnchorElement>(
-        "a.btn-source-edit-button",
+        'a[title="Edit This Page"]'
     );
 
     // Return the anchor.href or null.
@@ -86,6 +86,7 @@ export function getCurrentFileHref(): string | null {
  * @param href The GitHub file URL to extract the file path from
  */
 export function getFilePathFromHref(href: string | null): string | null {
+    console.log("in getFilePathFromHref with href:", href, "will probs need debugging");
     if (!href) return null;
     // Match both /blob/<branch>/ and /edit/<branch>/ patterns
     const match = href.match(
