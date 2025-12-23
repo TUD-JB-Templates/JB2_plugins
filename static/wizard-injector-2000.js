@@ -31,6 +31,10 @@ let addWizard = function() {
 
     // 5. Insert the editor at the top
     container.prepend(editorPlaceholder);
+    
+
+    // call window.initWizard to initialize the wizard
+    window.initWizard()
 }
 
 // Run once at first load with 2 second delay to ensure DOM is ready
