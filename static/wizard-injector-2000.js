@@ -8,4 +8,5 @@ const urlParams = new URLSearchParams(queryString);
 // Get the value of a specific parameter
 const isEditor = urlParams.get('editor');
 
+console.log(urlParams)
 console.log(`Editor parameter value: ${isEditor}`);
