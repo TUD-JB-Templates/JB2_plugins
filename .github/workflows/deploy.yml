@@ -35,6 +35,7 @@ jobs:
         run: |
           cd wizard/app
           npm install
+          npm install --save-dev vite-plugin-css-injected-by-js vite-plugin-solid
           npm run build
           # Ensure the root static folder exists
           mkdir -p ../../static
