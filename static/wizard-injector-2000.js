@@ -1,6 +1,6 @@
 console.log("Wizard Injector 2000 active.");
 console.log("url contains 'editor' =", window.location.href.includes("editor"));
-(function() {
+let addWizard = function() {
     // 1. Target the main article container
     // In MyST-theme, this is usually 'main' or a specific div
     const container = document.querySelector('article') || document.body; 
@@ -31,4 +31,9 @@ console.log("url contains 'editor' =", window.location.href.includes("editor"));
 
     // 5. Insert the editor at the top
     container.prepend(editorPlaceholder);
-})();
+}
+
+// Run once at first load with 2 second delay to ensure DOM is ready
+  document.addEventListener("DOMContentLoaded", () => {
+    setTimeout(addWizard, 2000);
+  });
