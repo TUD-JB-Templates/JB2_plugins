@@ -1,0 +1,1 @@
+console.log("Wizard Injector 2000 active.");
