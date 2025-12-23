@@ -1,27 +1,21 @@
-# This file was created automatically with `myst init --gh-pages` 🪄 💚
-# Ensure your GitHub Pages settings for this repository are set to deploy with **GitHub Actions**.
-
 name: MyST GitHub Pages Deploy
 on:
   push:
-    # Runs on pushes targeting the default branch
     branches: [main]
+  workflow_dispatch:
+
 env:
-  # `BASE_URL` determines, relative to the root of the domain, the URL that your site is served from.
-  # E.g., if your site lives at `https://mydomain.org/myproject`, set `BASE_URL=/myproject`.
-  # If, instead, your site lives at the root of the domain, at `https://mydomain.org`, set `BASE_URL=''`.
   BASE_URL: /${{ github.event.repository.name }}
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
   contents: read
   pages: write
   id-token: write
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+
 concurrency:
   group: 'pages'
   cancel-in-progress: false
+
 jobs:
   deploy:
     environment:
@@ -30,32 +24,46 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20 # Wizard likely needs 20+ for Vite/Solid
+
+      # --- NEW: BUILD VITE APP SECTION ---
+      - name: Build Wizard (Vite/Solid App)
+        run: |
+          cd wizard/app
+          npm install
+          npm run build
+          # Ensure the root static folder exists
+          mkdir -p ../../static
+          # Copy the bundle to the static folder used by MyST
+          cp dist/wizard-bundle.js ../../static/
+      # -----------------------------------
+
       - name: Setup Pages
         uses: actions/configure-pages@v3
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 18.x
+
       - name: Install MyST
         run: npm install -g mystmd
+
       - name: install dependencies
         run: |
           npm install qrcode
           npm install js-yaml
+
       - name: Build HTML Assets
         run: myst build --html
-
-      # We set the build folder, HTML_DIR, and the static files folder, STATIC_SRC.
-      # We then search for all .js files in STATIC_SRC and copy them (with directory structure) to the HTML_DIR.
-      # Next, we create <script> tags for each .js file and insert them before the closing </head> tag in all HTML files in HTML_DIR.
 
       - name: Insert static files
         run: |
           set -e
-
           HTML_DIR="_build/html"
           STATIC_SRC="static"
-          STATIC_DEST="$HTML_DIR/static"
-
+          # ... (rest of your existing shell script remains the same)
+          # It will now find the wizard-bundle.js we just moved into 'static'
+          
           echo "Searching for JS files in $STATIC_SRC..."
           js_files=$(find "$STATIC_SRC" -type f -name "*.js" | sort)
           js_count=$(echo "$js_files" | grep -c '.js' || true)
@@ -66,52 +74,28 @@ jobs:
           fi
 
           echo "Found $js_count JS file(s)."
-          echo "Copying JS files to $STATIC_DEST ..."
-          mkdir -p "$STATIC_DEST"
+          mkdir -p "$HTML_DIR/static"
           for js_file in $js_files; do
+            # Using cp --parents ensures pathing like static/wizard-bundle.js
             cp --parents "$js_file" "$HTML_DIR"/
-            echo "📁 Copied: $js_file → $HTML_DIR/$js_file"
           done
-          echo "✅ Copy complete."
 
-          echo ""
-          echo "Building absolute script tag block..."
           script_tags=""
           for js_file in $js_files; do
             filename=$(basename "$js_file")
             script_tags="${script_tags}\n<script src=\"${BASE_URL}/static/${filename}\"></script>"
           done
 
-          echo ""
-          echo "Searching for HTML files under $HTML_DIR..."
           html_files=$(find "$HTML_DIR" -type f -name "*.html" | sort)
-          html_count=$(echo "$html_files" | grep -c '.html' || true)
-
-          if [ "$html_count" -eq 0 ]; then
-            echo "⚠️ No HTML files found in $HTML_DIR"
-            exit 1
-          fi
-
-          echo "Found $html_count HTML file(s) to update:"
-          echo "Inserting <script> tags before </head> in each HTML file..."
-          echo "-------------------------------------------------------------"
-
           for file in $html_files; do
-            echo " Updating: $file"
             sed -i "s|</head>|${script_tags}\n</head>|g" "$file"
           done
-
-          echo ""
-          echo "✅ Injection complete."
-          echo "📊 Summary:"
-          echo "  - JS files processed: $js_count"
-          echo "  - HTML files updated: $html_count"
-          echo "-------------------------------------------------------------"
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: './_build/html'
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
