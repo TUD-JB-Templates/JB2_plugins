@@ -30,19 +30,6 @@ jobs:
         with:
           node-version: 20 # Wizard likely needs 20+ for Vite/Solid
 
-      # --- NEW: BUILD VITE APP SECTION ---
-      - name: Build Wizard (Vite/Solid App)
-        run: |
-          cd wizard/app
-          npm install
-          npm install --save-dev vite-plugin-css-injected-by-js vite-plugin-solid
-          npm run build
-          # Ensure the root static folder exists
-          mkdir -p ../../static
-          # Copy the bundle to the static folder used by MyST
-          cp dist/wizard-bundle.js ../../static/
-      # -----------------------------------
-
       - name: Setup Pages
         uses: actions/configure-pages@v3
 
