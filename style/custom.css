@@ -33,6 +33,19 @@ aside.admonition-grasple > div:first-child {
 aside.admonition-grasple .myst-admonition-header-text { /* set title size */
   font-weight: 300 !important;
 }
+
+.dark aside.admonition-grasple .dark\:text-white {
+   color: rgb(23 25 25); 
+}
+
+.dark aside.admonition-grasple .dark\:text-white {
+   color: rgb(23 25 25); 
+}
+
+html.dark iframe[src*="embed.grasple.com"] {
+  filter: invert(0.93) saturate(0.75) contrast(1.15) brightness(0.88);
+}
+
 /* end grasple */
 
 /* Laat datum natuurlijker overkomen */
