@@ -1,0 +1,25 @@
+{
+  "dependencies": {
+    "js-yaml": "^4.1.0",
+    "myst-common": "^1.9.4",
+    "myst-directives": "^1.6.4"
+  },
+  "name": "jb2_plugins",
+  "version": "1.0.0",
+  "description": "Plugins for JB2",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TUD-JB-Templates/JB2_plugins.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TUD-JB-Templates/JB2_plugins/issues"
+  },
+  "homepage": "https://github.com/TUD-JB-Templates/JB2_plugins#readme"
+}

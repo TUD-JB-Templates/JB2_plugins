@@ -1,6 +1,28 @@
 
 /* Code toegevoegd 17/05. Leuke kleurtjes zodat het makkelijk te zien is wat waar komt */
 
+
+/* grasple exercise */
+.grasple-embed {
+  width: 100% !important;
+  height: 500px !important;
+}
+
+
+div:has(> iframe[src*="embed.grasple.com"]) {
+  width: 100% !important;
+  height: 500px !important;
+}
+
+div:has(> iframe[src*="embed.grasple.com"]) > iframe[src*="embed.grasple.com"] {
+  width: 100% !important;
+  height: 100% !important;     /* <-- key */
+  display: block;              /* avoids inline gaps */
+  border: 0;
+  zoom: 0.8;
+}
+/* end grasple */
+
 /* Laat datum natuurlijker overkomen */
 #skip-to-frontmatter {
   margin-bottom: 0;

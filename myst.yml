@@ -24,6 +24,7 @@ project:
     - plugins/typst_eq.mjs
     - plugins/update-date-frontmatter/update-date-frontmatter.mjs
     # - plugins/read-csv.mjs
+    - plugins/grasple.mjs
 
     - plugins/gallery_generator.mjs
 
@@ -68,6 +69,7 @@ project:
   - title: cool stuff
     children: 
       - file: contents/csvread.md 
+      - file: contents/grasple.md
       
   - title: Typst support
     children: 
