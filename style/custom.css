@@ -8,7 +8,6 @@
   height: 500px !important;
 }
 
-
 div:has(> iframe[src*="embed.grasple.com"]) {
   width: 100% !important;
   height: 500px !important;
@@ -19,7 +18,20 @@ div:has(> iframe[src*="embed.grasple.com"]) > iframe[src*="embed.grasple.com"] {
   height: 100% !important;     /* <-- key */
   display: block;              /* avoids inline gaps */
   border: 0;
-  zoom: 0.8;
+  zoom: 0.7;
+}
+
+aside.admonition-grasple {
+  border-color: rgb(133, 132, 132) !important; /* Important zorgt ervoor dat we over de oude stijl heen schrijven */
+  background-color: rgb(255, 255, 255); /* Change background color text part*/
+} 
+
+aside.admonition-grasple > div:first-child {
+  background-color: rgb(156, 154, 154);  /* Change header background color */
+}
+
+aside.admonition-grasple .myst-admonition-header-text { /* set title size */
+  font-weight: 300 !important;
 }
 /* end grasple */
 
