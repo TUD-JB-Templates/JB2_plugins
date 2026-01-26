@@ -22,7 +22,7 @@ project:
     - plugins/pdf_exercise.mjs
     - plugins/aside.mjs
     - plugins/typst_eq.mjs
-    - plugins/update-date-frontmatter/update-date-frontmatter.mjs
+    # - plugins/update-date-frontmatter/update-date-frontmatter.mjs
     # - plugins/read-csv.mjs
     - plugins/grasple.mjs
     - plugins/h5p.mjs

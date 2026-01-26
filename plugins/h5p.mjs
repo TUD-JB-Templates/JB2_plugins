@@ -261,13 +261,13 @@ const h5pTransform = {
         origin = null;
       }
 
-      const resizerSrc = origin ? `${origin}/js/h5p-resizer.js` : "https://tudelft.h5p.com/js/h5p-resizer.js";
+      // const resizerSrc = origin ? `${origin}/js/h5p-resizer.js` : "https://tudelft.h5p.com/js/h5p-resizer.js";
 
-      const scriptNode = { type: "html", value: `<script src="${resizerSrc}" charset="UTF-8"></script>` };
+      // const scriptNode = { type: "html", value: `<script src="${resizerSrc}" charset="UTF-8"></script>` };
 
-      const doc = tree.children?.[0];
-      if (doc?.children && Array.isArray(doc.children)) doc.children.push(scriptNode);
-      else if (Array.isArray(tree.children)) tree.children.push(scriptNode);
+      // const doc = tree.children?.[0];
+      // if (doc?.children && Array.isArray(doc.children)) doc.children.push(scriptNode);
+      // else if (Array.isArray(tree.children)) tree.children.push(scriptNode);
     }
   },
 };
