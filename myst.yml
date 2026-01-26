@@ -26,6 +26,7 @@ project:
     # - plugins/read-csv.mjs
     - plugins/grasple.mjs
 
+
     - plugins/gallery_generator.mjs
 
     - plugins_new/new_example.mjs
@@ -70,6 +71,7 @@ project:
     children: 
       - file: contents/csvread.md 
       - file: contents/grasple.md
+      - file: contents/h5p.md
       
   - title: Typst support
     children: 
