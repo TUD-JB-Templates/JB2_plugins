@@ -37,12 +37,9 @@ aside.admonition-h5p .myst-admonition-header-text { /* set title size */
    color: rgb(23 25 25); 
 }
 
-.dark aside.admonition-h5p .dark\:text-white {
-   color: rgb(23 25 25); 
-}
-
 html.dark iframe[src*="h5p.com"] {
   filter: invert(1) hue-rotate(180deg) saturate(0.75) contrast(1.15) brightness(0.88);
+  mix-blend-mode: plus-lighter;
 }
 /* end h5p */
 
@@ -87,7 +84,7 @@ aside.admonition-grasple .myst-admonition-header-text { /* set title size */
 }
 
 html.dark iframe[src*="embed.grasple.com"] {
-  filter: invert(1) hue-rotate(180deg) saturate(0.75) contrast(1.15) brightness(0.88);
+  filter: invert(0.93) hue-rotate(180deg) saturate(0.75) contrast(1.15) brightness(0.88);
 }
 
 /* end grasple */
