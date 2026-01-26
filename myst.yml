@@ -25,6 +25,7 @@ project:
     - plugins/update-date-frontmatter/update-date-frontmatter.mjs
     # - plugins/read-csv.mjs
     - plugins/grasple.mjs
+    - plugins/h5p.mjs
 
 
     - plugins/gallery_generator.mjs
@@ -71,7 +72,7 @@ project:
     children: 
       - file: contents/csvread.md 
       - file: contents/grasple.md
-      - file: contents/h5p.md
+
       
   - title: Typst support
     children: 
