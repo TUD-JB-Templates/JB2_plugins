@@ -13,5 +13,5 @@ Should embed grasple exercise:
 ```
 
 ```{h5p} https://tudelft.h5p.com/content/1292808762511118137/embed
-:title: balloon
+
 ```
