@@ -15,4 +15,5 @@ Here an example of a normal exercise block.
 ```
 
 ```{h5p} https://tudelft.h5p.com/content/1292808762511118137/embed
+:license: CC BY-NC-SA 4.0
 ```

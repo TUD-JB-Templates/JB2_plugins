@@ -41,6 +41,12 @@ html.dark iframe[src*="h5p.com"] {
   filter: invert(1) hue-rotate(180deg) saturate(0.75) contrast(1.15) brightness(0.88);
   mix-blend-mode: plus-lighter;
 }
+
+aside.admonition-h5p .h5p-license {
+  font-size: 0.7em;
+  opacity: 0.85;
+  margin-top: 0.75rem;
+}
 /* end h5p */
 
 /* grasple exercise */

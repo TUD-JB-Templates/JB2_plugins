@@ -11,6 +11,7 @@ const h5p = {
 
     // If provided, this becomes the displayed title (header). If omitted, we infer from H5P metadata.
     title: { type: String, doc: "Optional displayed title (defaults to H5P aria-label/og:title/title)." },
+    license: { type: String, doc: "License text to show at the bottom of the H5P admonition." },
 
     // If you ever want to override ONLY the iframe title attribute separately:
     iframeTitle: { type: String, doc: "Optional iframe title attribute override (accessibility)." },
@@ -229,6 +230,17 @@ const h5pTransform = {
 
         if (node.caption && Array.isArray(node.caption)) {
           admonition.children.push({ type: "paragraph", children: node.caption });
+        }
+
+        if (opts.license && String(opts.license).trim()) {
+          admonition.children.push({
+            type: "paragraph",
+            class: "h5p-license",
+            children: [
+              { type: "text", value: "License: " },
+              { type: "text", value: String(opts.license).trim() },
+            ],
+          });
         }
 
         out.push(admonition);
