@@ -1,5 +1,5 @@
 # MyST build outputs
 _build
 # *.pdf zorgt ervoor dat gh action voor pdf bouwen niet goed gaat.
-*.pdf 
+# *.pdf 
 node_modules
