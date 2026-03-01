@@ -17,7 +17,7 @@ project:
 
   plugins:
 
-    - plugins/iframe/src/pdf_iframe.mjs
+    # - plugins/iframe/src/pdf_iframe.mjs
     # - plugins/iframe-to-thumbnail-pdf.mjs
     - plugins/pdf_exercise.mjs
     - plugins/aside.mjs
@@ -28,7 +28,7 @@ project:
     - plugins/h5p.mjs
 
 
-    - plugins/gallery_generator.mjs
+    # - plugins/gallery_generator.mjs
 
     - plugins_new/new_example.mjs
     - plugins_new/new_experiment.mjs
