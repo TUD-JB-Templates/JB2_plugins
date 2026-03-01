@@ -2,6 +2,39 @@
 
 import { execSync } from 'child_process';
 import path from 'path';
+import { readFileSync } from 'fs';
+
+// No more js-yaml import!
+
+function getFrontmatter(srcPath) {
+  try {
+    const text = readFileSync(srcPath, 'utf-8');
+    // Regex to capture everything between the first two sets of ---
+    const match = /^---\r?\n([\s\S]*?)\r?\n---/.exec(text);
+    
+    if (!match) return null;
+
+    const frontmatterBlock = match[1];
+    const data = {};
+
+    // Split by line and parse key-value pairs manually
+    frontmatterBlock.split('\n').forEach(line => {
+      const [key, ...valueParts] = line.split(':');
+      if (key && valueParts.length > 0) {
+        const value = valueParts.join(':').trim();
+        
+        // Basic type conversion
+        if (value.toLowerCase() === 'false') data[key.trim()] = false;
+        else if (value.toLowerCase() === 'true') data[key.trim()] = true;
+        else data[key.trim()] = value;
+      }
+    });
+
+    return data;
+  } catch (err) {
+    return null;
+  }
+}
 
 // Cache per build-run (key = absolute file path)
 const gitDateCache = new Map();
@@ -50,8 +83,14 @@ const updateDateTransform = {
     return (node, file) => {
       if (!file?.path) return node;
 
-      console.log(file)
-      
+    
+      // Get frontmatter to check for "no-update-date: true"
+        const frontmatter = getFrontmatter(file.path);
+        if (frontmatter?.['no-update-date'] === true) {
+            console.log(`Skipping update date for ${file.path} due to frontmatter setting.`);
+            return node;
+        }
+
       const isPDF = process.argv.some(arg => arg.includes("pdf") || arg.includes("typst"));
       if (isPDF) return node; 
 
