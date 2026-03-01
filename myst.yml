@@ -42,7 +42,7 @@ project:
   exports:
     - format: typst
       template: plain_typst_book
-      output: exports/Test_plugin_typst.pdf
+      output: Exports/Test_plugin_typst.pdf
       id: output-pdf1
     
     # - format: pdf
