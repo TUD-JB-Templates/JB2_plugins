@@ -4,8 +4,8 @@ import { execSync } from 'child_process';
 import path from 'path';
 import { readFileSync } from 'fs';
 
-// No more js-yaml import!
 
+// Parse frontmatter manually to avoid adding a dependency
 function getFrontmatter(srcPath) {
   try {
     const text = readFileSync(srcPath, 'utf-8');

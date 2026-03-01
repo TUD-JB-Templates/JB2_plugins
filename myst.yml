@@ -22,7 +22,7 @@ project:
     - plugins/pdf_exercise.mjs
     - plugins/aside.mjs
     - plugins/typst_eq.mjs
-    - plugins/update-date-gh.mjs
+    - https://github.com/jupyter-book/myst-plugins/releases/download/page-last-updatedv1.1/page-last-updated.mjs
     # - plugins/read-csv.mjs
     - plugins/grasple.mjs
     - plugins/h5p.mjs
