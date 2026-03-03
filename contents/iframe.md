@@ -7,3 +7,8 @@ The package that keeps on breaking
 
 a great movie, and a great caption
 ```
+
+:::{iframe} https://www.youtube.com/embed/F3st8X0L1Ys
+:width: 100%
+Get up and running with MyST in Jupyter!
+:::
