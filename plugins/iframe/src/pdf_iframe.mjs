@@ -104,6 +104,8 @@ const iframeTransform = {
 
                     // Else keep going
 
+                    console.log("trying to use youtube thumbnail with url ", url);
+
                     let youtube_video_id = url.match(/youtube\.com.*(\?v=|\/embed\/)(.{11})/).pop();
                     let thumbnail = `https://img.youtube.com/vi/${youtube_video_id}/0.jpg`;
 

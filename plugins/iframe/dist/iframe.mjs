@@ -1634,18 +1634,26 @@ var stringToBytes = qrcode.stringToBytes;
 
 // src/pdf_iframe.mjs
 import { writeFile } from "fs/promises";
-var image_folder = "./images";
+import { existsSync, mkdirSync } from "fs";
+var image_folder = "qr_images";
 var iframeTransform = {
   name: "iframe-pdf",
   doc: "Replace iframes in PDF builds with QR codes.",
   stage: "document",
-  plugin: (opts, utils) => async (tree) => {
+  plugin: (opts, utils) => async (tree, vfile) => {
     const isPDF = process.argv.some((arg) => arg.includes("pdf") || arg.includes("typst"));
     const rootChildren = tree.children[0]?.children || [];
     if (isPDF) {
+      const relativePath = vfile.history[0].replace(process.cwd(), "");
+      const folderPath = relativePath.substring(0, relativePath.lastIndexOf("\\"));
+      const images = utils.selectAll("container", tree);
       for (const [index, node] of rootChildren.entries()) {
         if (node.type === "container" && node.children[0]?.type === "iframe") {
+          if (!existsSync(`.${folderPath}\\${image_folder}`)) {
+            mkdirSync(`.${folderPath}\\${image_folder}`);
+          }
           const url = node.children[0]?.src || "No link found";
+          let caption = node.children[1]?.children[0]?.children[0]?.value || " - ";
           const urlParts = url.split("/");
           const lastPart = urlParts[urlParts.length - 1];
           try {
@@ -1654,20 +1662,75 @@ var iframeTransform = {
             qr.addData(url);
             qr.make();
             const svg = qr.createSvgTag({ cellSize: 4, margin: 2 });
-            const outputFile = `${image_folder}/qrcode_${node.qr_index}.svg`;
+            const outputFile = `.${folderPath}\\${image_folder}\\qrcode_${node.qr_index}.svg`;
             await writeFile(outputFile, svg, "utf8");
-            console.log(`[IFRAME] Generated QR code, saved to ${outputFile}`);
+            if (!url.includes("youtube")) {
+              node.type = "container";
+              node.kind = "figure";
+              node.children = [
+                {
+                  type: "container",
+                  kind: "figure",
+                  subcontainer: true,
+                  children: [
+                    {
+                      type: "image",
+                      url: `qr_images/qrcode_${node.qr_index}.svg`,
+                      // updated to .svg
+                      width: "200px",
+                      alt: "QR code"
+                    }
+                  ]
+                },
+                {
+                  type: "caption",
+                  children: [
+                    {
+                      type: "paragraph",
+                      children: [
+                        { type: "text", value: `${caption} - Scan the QR code or click ` },
+                        { type: "link", url, children: [{ type: "text", value: "here" }] },
+                        { type: "text", value: " to go to the video." }
+                      ]
+                    }
+                  ]
+                }
+              ];
+              continue;
+            }
+            console.log("trying to use youtube thumbnail with url ", url);
+            let youtube_video_id = url.match(/youtube\.com.*(\?v=|\/embed\/)(.{11})/).pop();
+            let thumbnail = `https://img.youtube.com/vi/${youtube_video_id}/0.jpg`;
             node.type = "container";
             node.kind = "figure";
             node.children = [
               {
-                type: "image",
-                url: `../images/qrcode_${node.qr_index}.svg`,
-                // updated to .svg
-                alt: "QR code",
-                title: "scan the QR code to open the link",
-                width: "200px",
-                align: "center"
+                type: "container",
+                kind: "figure",
+                subcontainer: true,
+                children: [
+                  {
+                    type: "image",
+                    url: `qr_images/qrcode_${node.qr_index}.svg`,
+                    // updated to .svg
+                    alt: "QR code"
+                  }
+                ]
+              },
+              {
+                type: "container",
+                kind: "figure",
+                subcontainer: true,
+                children: [
+                  {
+                    type: "image",
+                    url: thumbnail,
+                    // updated to .svg
+                    alt: "Thumbnail",
+                    title: " - ",
+                    align: "center"
+                  }
+                ]
               },
               {
                 type: "caption",
@@ -1675,9 +1738,9 @@ var iframeTransform = {
                   {
                     type: "paragraph",
                     children: [
-                      { type: "text", value: "scan the QR code to open the link or click " },
+                      { type: "text", value: `${caption} - Scan the QR code or click ` },
                       { type: "link", url, children: [{ type: "text", value: "here" }] },
-                      { type: "text", value: " to open the link." }
+                      { type: "text", value: " to go to the video." }
                     ]
                   }
                 ]
