@@ -1,4 +1,4 @@
-console.log("[wizard] Script loaded");
+console.log("[wizard] Script loaded (updated).");
 
 let isEditorMode = false;
 let iframeElement = null;
@@ -9,6 +9,7 @@ let filePath = "not found";
 let container = null;
 let footerLinks = null;
 let giscus = null;
+let loaderElement = null;
 
 let hasError = false;
 let errorMessage = ""; 
@@ -177,11 +178,11 @@ const showEditor = function() {
     
     isEditorMode = true;
     // sync toggle checkbox if present
-    try {
-        const nav = document.querySelector('div.flex.items-center.flex-grow.w-auto');
-        const label = nav && nav.querySelector('label.switch');
-        if (label && label._checkbox) label._checkbox.checked = true;
-    } catch (e) {}
+    // try {
+    //     const nav = document.querySelector('div.flex.items-center.flex-grow.w-auto');
+    //     const label = nav && nav.querySelector('label.switch');
+    //     if (label && label._checkbox) label._checkbox.checked = true;
+    // } catch (e) {}
     console.log("[wizard] Editor view activated.");
 };
 
@@ -240,17 +241,14 @@ const addToggleButton = function() {
     console.log("[wizard] Toggle button added to navbar.");
 };
 
-//
-// The actual widget 
-//
 
 function render({ model, el }) {   
-
-    console.log("[wizard] render function executing")
     if (!parseMetadata()) {
         return;
     }
     injectToggleStyles();
     addToggleButton();
+
+
 }
 export default { render };
