@@ -245,6 +245,8 @@ const addToggleButton = function() {
 //
 
 function render({ model, el }) {   
+
+    console.log("[wizard] render function executing")
     if (!parseMetadata()) {
         return;
     }
