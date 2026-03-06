@@ -44,11 +44,11 @@ jobs:
       - name: Build HTML Assets
         run: myst build --html
 
-      - name: Add wizard to book
-        uses: luukfroling/Wizard-jb2/actions@main 
-        with:
-            script_url: "https://cdn.jsdelivr.net/gh/luukfroling/Wizard-jb2@main/script/start_wizard.js"
-            html_dir: "_build/html"
+      # - name: Add wizard to book
+      #   uses: luukfroling/Wizard-jb2/actions@main 
+      #   with:
+      #       script_url: "https://cdn.jsdelivr.net/gh/luukfroling/Wizard-jb2@main/script/start_wizard.js"
+      #       html_dir: "_build/html"
 
       # - name: Insert static files
       #   run: |

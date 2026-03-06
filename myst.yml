@@ -26,6 +26,7 @@ project:
     # - plugins/read-csv.mjs
     - plugins/grasple.mjs
     - plugins/h5p.mjs
+    - plugins/wizard.mjs
 
     # - plugins/gallery_generator.mjs
 
