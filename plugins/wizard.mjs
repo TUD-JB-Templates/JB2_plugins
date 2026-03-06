@@ -11,7 +11,7 @@ const plugin = {
             children: [
                 {
                 type: 'anywidget',
-                esm: './widgets/wizard.mjs',
+                esm: '../widgets/wizard.mjs',
                 model: {},
                 css: undefined,
                 class: undefined
