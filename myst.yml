@@ -27,6 +27,7 @@ project:
     - plugins/grasple.mjs
     - plugins/h5p.mjs
     - plugins/wizard.mjs
+    - plugins/giscus.mjs
 
     # - plugins/gallery_generator.mjs
 
