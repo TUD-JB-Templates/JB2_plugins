@@ -11,7 +11,7 @@ const plugin = {
             children: [
                 {
                 type: 'anywidget',
-                esm: 'widgets/giscus.mjs',
+                esm: 'https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/giscus-widget/giscus.mjs',
                 model: {},
                 css: undefined,
                 class: undefined
