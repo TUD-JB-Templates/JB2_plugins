@@ -1,11 +1,10 @@
-
 function render({ model, el }) {   
 
-    console.log("[giscus wrapper] render function executing")
+    console.log("[Giscus] Loaded")
     
     
     if (document.getElementById("giscus_container")){
-        console.log("💬 Giscus already injected, skipping.");
+        console.log("[Giscus] Container already exists");
         return;
     }
     
@@ -17,8 +16,6 @@ function render({ model, el }) {
     let target = document.getElementsByClassName("article-grid subgrid-gap col-screen article content")[0];
     
     target.appendChild(container);
-
-    console.log("💬 Injecting Giscus...");
 
     const script = document.createElement("script");
     script.src = "https://giscus.app/client.js";
@@ -37,7 +34,7 @@ function render({ model, el }) {
     script.async = true;
 
     container.appendChild(script);
-    console.log("💬 Giscus injected.");
+
 }
 
 export default { render };

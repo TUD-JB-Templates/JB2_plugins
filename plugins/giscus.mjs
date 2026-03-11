@@ -1,8 +1,12 @@
+/*
+*  ⚠️⚠️PLEASE READ: when using this plugin for other widgets, make sure to change the name!⚠️⚠️
+*/
+
 const plugin = {
   name: 'Append anywidget to every page',
   transforms: [
     {
-      name: 'transform-add-anywidget',
+      name: 'add-Giscus-anywidget',
       doc: 'Adds an anywidget to the end of every page',
       stage: 'document',
       plugin: (_, utils) => (node) => {
@@ -11,7 +15,7 @@ const plugin = {
             children: [
                 {
                 type: 'anywidget',
-                esm: 'https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/giscus-widget/giscus_2.mjs',
+                esm: 'https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/giscus-widget/giscus_widget.mjs',
                 model: {},
                 css: undefined,
                 class: undefined

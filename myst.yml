@@ -27,7 +27,7 @@ project:
     - plugins/grasple.mjs
     - plugins/h5p.mjs
     - plugins/wizard.mjs
-    - plugins/giscus.mjs
+    - https://github.com/TUD-JB-Templates/JB2_plugins/releases/download/giscus-widget/giscus_plugin.mjs
 
     # - plugins/gallery_generator.mjs
 
